@@ -651,12 +651,14 @@ namespace MFM
 
   template <class EC>
   bool Tile<EC>::Advance()
-  {
+  { 
     if (!ConsiderStateChange())
     {
       return false;
     }
 
+    ProcessAudio();  // TODO VDT - figure out what this is going to do, and where it should be called.
+    
     bool didWork = false;
     State curState = GetCurrentState();
     if (!m_enabled)

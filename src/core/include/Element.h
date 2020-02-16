@@ -481,6 +481,26 @@ namespace MFM
      */
     virtual u32 GetElementColor() const = 0;
 
+
+    /**
+     * ADDED VDT
+     * Gets the 32-bit ARGB formatted sound represents this element,
+     * independent of any atomic details.
+     *
+     * @returns The 32-bit ARGB formatted sound that represents this
+     * element.
+     * 
+     * If this is pure virtual all the elements in src/elements/include/ 
+     * need to have a definition for it. I have given UlamElement an
+     * implementation of this function. but all the elements in src/elements/include/
+     * inherit directly from Element NOT UlamElement, so for now leave this implementation
+     */
+    virtual u32 GetElementAudio() const    // TODO VDT - make this pure virtual and deal with it. 
+    {
+      return 0;
+    }
+
+    
     /**
      * Toggles the lowlight / normal rendering of all Atoms of this
      * Element.

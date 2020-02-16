@@ -258,6 +258,15 @@ namespace MFM
       return GetTile().GetSite(m_center);
     }
 
+    /**
+     * ADDED VDT
+     * 
+     */
+    const void ProcessAudio(u32 uSound) const
+    {
+      m_tile.ProcessAudio(uSound);
+    }
+    
     const Base<AC> & GetBase() const
     {
       return m_centerBase;

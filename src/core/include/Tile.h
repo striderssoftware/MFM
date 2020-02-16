@@ -47,6 +47,9 @@
 #include "OverflowableCharBufferByteSink.h"  /* for OString16 */
 #include "LineCountingByteSource.h"
 
+// ADDED VDT
+#include "../../aui/include/Audio.h"
+
 namespace MFM
 {
 #define IS_OWNED_CONNECTION(X) ((X) - Dirs::EAST >= 0 && (X) - Dirs::EAST < 4)
@@ -307,13 +310,18 @@ namespace MFM
         Tile. */
     ElementTable<EC> m_elementTable;
 
+    // ADDED VDT
+    /** The Audio instance which does all Audio for this
+        Tile. */
+    Audio m_Audio;
+    
     /** The PRNG used for generating all random numbers in this Tile. */
     Random m_random;
 
     UlamClassRegistry<EC> m_ucr;
 
     s32 m_keyValues[MAX_TILE_PARAMETERS];
-
+    
     void ClearTileParameters()
     {
       for (u32 i = 0; i < MAX_TILE_PARAMETERS; ++i)
@@ -879,6 +887,65 @@ namespace MFM
     ElementTable<EC> & GetElementTable()
     {
       return m_elementTable;
+    }
+
+
+    /**
+     * ADDED VDT
+     * This is called from the Tile (this) in Tile<EC>::Advance()
+     * this is NOT for calling with an Elements audio attribute but
+     * for a Tile to perform an Audio Event as part of its computation.
+     * see the TODO's in function body.
+     */
+    bool ProcessAudio()
+    {
+      // TODO maybe - get the actual audio stream and do sometning with it. i.e - m_Audio.GetAudio();  
+      // TODO maybe - check the m_elementTable for element audio behavior
+      // TODO maybe - Check the EventWindow for EventWindow audio behavior.
+      
+#ifdef NOTYET  
+      // Have the Tile respond without "input" from elements.
+      if ( m_Audio.CheckForAudioEvent() )
+	{
+	  AudioResponse();
+	}
+#endif
+      
+      return true;
+    }
+    
+    /**
+     * ADDED VDT
+     * This is called from the EventWindow when processing an Elements behavior, Elements now have
+     * an Audio attribute.
+     */
+    void ProcessAudio(u32 uSound)
+    {
+      m_Audio.ProcessAudio(uSound);
+    }
+
+    /**
+     * ADDED VDT
+     * This is to Perform a response to the Audio system notifying
+     * the Tile (this) of an input audio event.
+     */    
+    bool AudioResponse()
+    {
+      //TODO VDT - have the tile respond to some Audio Event.
+
+      ClearAtoms();  //TODO VDT do something cooler.
+
+      return true;
+    }
+    
+    /**
+     * ADDED VDT
+     * This is an accessor for other objects to get the Audio stream,
+     * The Tile owns the Audio system.
+     */
+    istream*  GetAudio()
+    {
+      return m_Audio.GetAudio();
     }
 
     const Element<EC> * ReplaceEmptyElement(const Element<EC>& newEmptyElement) ;

@@ -105,6 +105,7 @@ namespace MFM
     virtual bool GetPlaceable() const = 0;
     virtual const u32 GetVersion() const = 0;
     virtual const u32 GetElementColor() const = 0;
+    virtual const u32 GetElementAudio() const = 0; // ADDED VDT
     virtual const u32 GetEventWindowBoundary() const = 0;
     virtual const u32 GetSymmetry(const UlamContext<EC>& uc) const = 0;
 
@@ -200,6 +201,16 @@ namespace MFM {
       return 0xffffffff;
     }
 
+    // ADDED VDT
+    virtual u32 GetElementAudio() const
+    {
+      if (m_info) {
+        return m_info->GetElementAudio();
+      }
+      return 0x00000000;
+    }
+
+    
     virtual u32 GetAtomColor(const ElementTable<EC> & et, const UlamClassRegistry<EC> & ucr, const T& atom, u32 selector) const ;
 
     virtual u32 Diffusability(EventWindow<EC> & ew, SPoint nowAt, SPoint maybeAt) const ;

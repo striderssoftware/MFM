@@ -10,6 +10,8 @@
 #include "UlamContextEvent.h"
 #include "UlamContextRestricted.h"
 
+static const unsigned long  AUDIO_DEFAULT = 0x0; // ADDED VDT
+
 namespace MFM {
 
   template <class EC>
@@ -21,12 +23,26 @@ namespace MFM {
 
   template <class EC>
   void UlamElement<EC>::Behavior(EventWindow<EC>& window) const
-  {
+  {    
     Tile<EC> & tile = window.GetTile();
+    
     const ElementTable<EC> & et = tile.GetElementTable();
     UlamContextEvent<EC> uc(et);
     uc.SetTile(tile);
 
+    // ADDED VDT
+    // TODO VDT - I dont like this calls being here. - Perhaps - IN or similar to virtual behave call below
+    u32 uAudio = m_info ? m_info->GetElementAudio() : (u32) AUDIO_DEFAULT;
+    window.ProcessAudio(uAudio);
+
+    // TODO VDT - Should an Element ever get Audio Input directly i.e. - EventWindow::GetAudio(), I dont know.
+    //            maybe - the Element could get a Notice of an Audio Event occurance on the Containing Tile.
+    //            BUT, it should be up to the Element currently being processed if it cares about audio input.
+    //            maybe - Whatever the thoughts were for processing changes in LIGHT should apply to Audio
+#ifdef NOTYET
+    window.GetAudioEvent();
+#endif
+    
     u32 sym = m_info ? m_info->GetSymmetry(uc) : (u32) PSYM_DEG000L;
     window.SetSymmetry((PointSymmetry) sym);
 
@@ -35,6 +51,7 @@ namespace MFM {
     // how to do an ulam virtual function call in c++
     typedef void (* Uf_6behave) (const UlamContext<EC>&, UlamRef<EC>& );
     ((Uf_6behave) this->getVTableEntry(BEHAVE_VTABLE_INDEX)) (uc, ur);
+
   }
 
   template <class EC>
