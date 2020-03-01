@@ -60,9 +60,9 @@ endif
 
 # Common flags: All about errors -- let's help them help us
 # Also: We need pthread!
-COMMON_CFLAGS+=-pedantic -Wundef -D SHARED_DIR=\"$(SHARED_DIR)\" -pthread
+COMMON_CFLAGS+= -pedantic -Wundef -D SHARED_DIR=\"$(SHARED_DIR)\" -pthread
 COMMON_FLAGS+= -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers
-# not reliable enough: COMMON_CPPFLAGS+=-Wmissing-noreturn -ansi -pedantic -Wall -Werror -D SHARED_DIR=\"$(SHARED_DIR)\" -pthread
+# not reliable enough: COMMON_CPPFLAGS+=-Wmissing-noreturn -ansi -pedantic -D SHARED_DIR=\"$(SHARED_DIR)\" -pthread
 COMMON_CPPFLAGS+=-ansi -pedantic -D SHARED_DIR=\"$(SHARED_DIR)\" -pthread
 COMMON_LDFLAGS+=-Wl,--fatal-warnings -pthread
 

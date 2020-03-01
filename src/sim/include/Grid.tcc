@@ -832,6 +832,18 @@ namespace MFM {
             m_lastEventTile.GetY());
   }
 
+
+  // TODO VDT
+  template <class GC>
+  u64 Grid<GC>::GetAudioEventsTest()
+  {
+    LOG.Message("                     Grid::GetAudioEventsTest() was called");
+
+    u64 total = 777;
+    return total;
+  }
+
+
   template <class GC>
   u64 Grid<GC>::GetTotalEventsExecuted() const
   {

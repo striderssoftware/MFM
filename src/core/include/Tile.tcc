@@ -656,8 +656,6 @@ namespace MFM
     {
       return false;
     }
-
-    ProcessAudio();  // TODO VDT - figure out what this is going to do, and where it should be called.
     
     bool didWork = false;
     State curState = GetCurrentState();

@@ -6,6 +6,14 @@
 
 namespace MFM {
 
+  // VDT
+  template <class EC>
+  u64 ElementTable<EC>::GetAudioEventsTest()
+  {
+    u64 temp = 777;
+    return (u64) temp;
+  }
+
   template <class EC>
   s32 ElementTable<EC>::GetIndex(u32 elementType) const
   {

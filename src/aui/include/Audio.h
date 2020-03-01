@@ -18,6 +18,12 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
+
+#define DOAUDIO = true;
+#define DOAUDIOINPUT = true;
+#define DOAUDIOLOGGING = true;
+//#define AUDIONOTYET = true;    
+
 #include <iostream>
 
 //added for pipes
@@ -28,27 +34,47 @@
 #include <fcntl.h>
 #include <string.h>
 
+#include "AuiConstants.h"
 
 using namespace std;
-
 
 //#include "FileByteSink.h" // For STDERR
 
 //TODO VDT - get rid of releative paths?
 #include "../../core/include/Logger.h"
 
-#define FIFO_FILE "MYFIFO"
 
 namespace MFM
 {
-  class Audio
+ static bool initialize = true;
+  
+  class Audio 
   {
 
   public:
 
-    Audio(){}
+    Audio() :
+      m_fd(-1),
+      m_micfp(NULL)
+    {
+#ifdef DOAUDIOINPUT
+      if ( initialize )
+	{
+#ifdef DOAUDIOLOGGING
+      LOG.Message("Audio: constructor was called");
+#endif
+	  CreatePipe();
+	  StartMicMonitor();
+	  initialize = false;
+	}
+#endif
+    }
 
-    virtual ~Audio(){}
+    virtual ~Audio()
+    {
+      close(m_fd);
+      pclose(m_micfp);
+    }
 
     /**
      * A test function
@@ -56,12 +82,47 @@ namespace MFM
      */
     bool AuiTestFunction(u32 uSound)
     {
-#ifdef NOTNOW
+#ifdef DOAUDIOLOGGING
       LOG.Message("Audio:  AuiTestFunction - was called");
       LOG.Message("uSound was  %x", static_cast<int>(uSound));
 #endif
       return true;
     }
+
+    
+    /**
+     * This will start a new process to listen to the MIC
+     * 
+     */
+    bool StartMicMonitor()
+    {
+      LOG.Message("Starting the Mic Monitor EXE");
+
+      m_micfp = popen(MIC_MONITOR_EXE_PATH, "r");
+
+      if ( m_micfp == NULL )
+	{
+#ifdef DOAUDIOLOGGING
+	  LOG.Message("The Monitor exe failed to start");
+#endif
+	  return false;
+	}
+      
+      return true;
+    }
+    
+    /**
+     * This will create a named pipe.
+     */
+    bool CreatePipe()
+    {
+      /* Create the FIFO if it does not exist */
+      //umask(0);
+      mknod(FIFO_FILE, S_IFIFO|0777, 0);
+      
+      return true;
+    }
+    
 
     /**
      * This takes a u32 sound attribute maps that to wav files and plays them.
@@ -69,12 +130,12 @@ namespace MFM
      */
     bool ProcessAudio(u32 uSound)
     {
-#ifdef NOTNOW
-      LOG.Message("Audio:  AuiTestFunction - was called");
-      LOG.Message("uSound was  %x", static_cast<int>(uSound));
+#ifdef DOAUDIOLOGGING
+      //LOG.Message("Audio:  ProcessAudio - was called");
+      //LOG.Message("uSound was  %x", static_cast<int>(uSound));
 #endif
       
-      return PlaySound(uSound);
+      return true; //PlaySound(uSound);
     }
 
     
@@ -84,11 +145,16 @@ namespace MFM
      */
     istream*  GetAudio()
     {
+#ifdef AUDIONOTYET
+#ifdef DOAUDIOINPUT
+      
+#ifdef DOAUDIOLOGGING
       LOG.Message("Audio:GetAudio - was called");
-#ifdef NOTNOW
+#endif
       //system("arecord -D hw:0,0 -c1 -d 0 -r 22050 -f S16_LE");  //TODO VDT get output into the stream m_pMicInput
       system("arecord -D hw:0,0 -c1 -d 1 -r 22050 -f S16_LE test.wav");  //TODO VDT get output into the stream m_pMicInput
-#endif      
+#endif
+#endif
       return m_pMicInput;
     }
 
@@ -99,33 +165,47 @@ namespace MFM
      */
     bool CheckForAudioEvent()
     {
-#ifdef NOTYET
+#ifdef DOAUDIOINPUT
       int fd;
-      char readbuf[80]; //TODO the messages are "pings". They should be of a fixed size.
+      char readbuf[11]; //TODO the messages (dosomething) are "pings". They should be of a fixed size.
       int read_bytes;
 
-      cout <<  "in CheckForMessage loop" << endl;
-      
-      fd = open(FIFO_FILE, O_RDONLY);
-      if ( fd == -1 )
+      //LOG.Message("Audio:CheckForAudioEvent - was called");
+
+      if ( m_fd == -1 )
 	{
-	  // TODO VDT check errno
+	  m_fd = open(FIFO_FILE, O_RDONLY);
+	  fcntl(m_fd, F_SETFL, O_NONBLOCK);
+	}
+      if ( m_fd < 0 )
+	{
 	  // TODO VDT log error
+	  LOG.Message("Audio::CheckForAudioEvent  - open failed errno was: %i", errno);
 	  return false;
 	}
       
-      read_bytes = read(fd, readbuf, sizeof(readbuf));
-      if ( read_bytes == -1 )
+      read_bytes = read(m_fd, readbuf, sizeof(readbuf));
+      if ( read_bytes < 0 )
 	{
-	  // TODO VDT check errno
-	  // TODO VDT log error
+	  if ( errno != EAGAIN )
+	    {
+	      // TODO ERROR CASE, stop this, stop monitor??
+	      LOG.Message("Audio::CheckForAudioEvent -  error");
+	    }
+	  
 	  return false;
 	}
-      
+      else if ( read_bytes == 0 )
+	{
+	   LOG.Message("Audio::CheckForAudioEvent - no bytes to read");
+	  return false;
+	}
+
       readbuf[read_bytes] = '\0';
-      cout << "Received string:" <<  readbuf << " and length is" <<  (int)strlen(readbuf) << endl;
+      LOG.Message("Received a message in namedPipe");
+
 #endif
-      
+
       //TODO the messages are "pings", no need to check message contents.
       return true;  // There WAS an audioEvent
     }
@@ -138,42 +218,48 @@ namespace MFM
      */
     bool PlaySound(u32 uSound)
     {
-      // development code it will go away!
-      // sorry about the paths
-      
+#ifdef DOAUDIO
+      // TODO VDT - development code it will go away!                                                                                          
+      // TODO VDT - sorry about the paths, fix them to point into your distro.        
+
       if ( uSound == 0u )
         {
           return true;
         }
       else if ( uSound == (u32)0xff000011 )
         {
-	  system("aplay -d 1 ~/gitT2/TransferT2/T2_TileProject/MFM/res/audio/aMinorScale/A.wav");
+          system("aplay -d 1 ~/code/T2ProjectCodeRepo/MFM/res/audio/aMinorScale/A.wav");
           return true;
         }
       else if ( uSound == (u32)0xff000033 )
         {
-	  system("aplay -d 1 ~/gitT2/TransferT2/T2_TileProject/MFM/res/audio/aMinorScale/C.wav");
-	  return true;
+          system("aplay -d 1 ~/code/T2ProjectCodeRepo/MFM/res/audio/aMinorScale/C.wav");
+          return true;
         }
       else if ( uSound == (u32)0xff000055 )
         {
-	  system("aplay -d 1 ~/gitT2/TransferT2/T2_TileProject/MFM/res/audio/aMinorScale/E.wav");
-	  return true;
+          system("aplay -d 1 ~/code/T2ProjectCodeRepo/MFM/res/audio/aMinorScale/E.wav");
+          return true;
         }
       else if ( uSound == (u32)0xff000077 )
         {
-	  system("aplay -d 1 ~/gitT2/TransferT2/T2_TileProject/MFM/res/audio/aMinorScale/G#.wav");
+          system("aplay -d 1 ~/code/T2ProjectCodeRepo/MFM/res/audio/aMinorScale/G#.wav");
           return true;
         }
       else
         {
           LOG.Message("uSound was  %x", static_cast<int>(uSound));
-	  // TODO VDT play a sound  i.e. -  aplay wavFiles/error.wav
-          return true;
-        }
+          // TODO VDT play a sound  i.e. -  aplay wavFiles/error.wav
+	}
+#endif      
+                return true;
+      
+    }//END play sound    
 
-    }  //END play sound
+   
     
+    int m_fd;
+    FILE* m_micfp;
     istream* m_pMicInput;
     
   };

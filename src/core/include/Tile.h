@@ -903,13 +903,11 @@ namespace MFM
       // TODO maybe - check the m_elementTable for element audio behavior
       // TODO maybe - Check the EventWindow for EventWindow audio behavior.
       
-#ifdef NOTYET  
       // Have the Tile respond without "input" from elements.
       if ( m_Audio.CheckForAudioEvent() )
 	{
 	  AudioResponse();
 	}
-#endif
       
       return true;
     }
@@ -933,6 +931,7 @@ namespace MFM
     {
       //TODO VDT - have the tile respond to some Audio Event.
 
+      //LOG.Message("Tile::AudioResponse was called");
       ClearAtoms();  //TODO VDT do something cooler.
 
       return true;

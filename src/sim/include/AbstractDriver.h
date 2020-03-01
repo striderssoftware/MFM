@@ -228,6 +228,30 @@ namespace MFM
     void XXXCHECKCACHES() { m_grid.CheckCaches(); }
 
     /**
+     * ADDED VDT
+     * @param grid The Grid.
+     */
+    void UpdateAudio(OurGrid& grid)
+    {
+      // TODO - Processing in the Grid ?
+      // TODO - Generating Audio from the Grid
+      LOG.Message("                     AbstractDriver::UpdateAudio(grid) was called)");
+      u64 audioEvents = grid.GetAudioEventsTest();
+    }
+
+    /**
+     * ADDED VDT
+     * @param table The Table.
+     */    
+    void UpdateAudio(OurElementTable& table)
+    {
+      // TODO - Processing in the table ?
+      // TODO - Generating Audio from the Elements.
+      LOG.Message("                     AbstractDriver::UpdateAudio(Table) was called");
+      u64 audioEvents = table.GetAudioEventsTest();
+    }
+    
+    /**
      * Runs the held Grid and all its associated threads for a brief
      * amount of time, letting about \c m_aepsPerFrame AEPS occur
      * before pausing. This also learns about how long an AEPS takes
@@ -235,7 +259,7 @@ namespace MFM
      *
      * @param grid The Grid which is updated during this call.
      */
-    void UpdateGrid(OurGrid& grid)
+    void UpdateGrid(OurGrid& grid) //TODO VDT - calls to UpdateAudio??
     {
       grid.Unpause();  // pausing and unpausing should be overhead!
 
@@ -482,6 +506,15 @@ namespace MFM
      * The main loop which runs this simulation -- unless overridden
      * by a subclass.
      */
+
+    /*
+     * TODO VDT
+     * this function is overriden and so never called. It is overriden by
+     * AbstractGUIDriver and that loop runs the simulation. But I do not want to
+     * put Audio code in the GUI. Perhaps this loop should not be overriden 
+     * by a derived class but call into them as it does below where I have added 
+     * a call to UpdateAudio 
+     */
     virtual void RunHelper()
     {
       bool running = true;
@@ -489,11 +522,21 @@ namespace MFM
       while(running)
       {
         UpdateGrid(m_grid);
+	UpdateAudio(m_grid);   //TODO VTD - audio - should this  go into UpdateGrid,
         running = RunHelperExiter();
       }
 
     }
 
+    /*
+     * TODO VDT
+     * Whomever calls RunHelper could also call RunAudioHelper
+     */    
+    virtual void RunAudioHelper()
+    {
+      UpdateAudio(m_grid);
+    }
+    
     virtual bool RunHelperExiter() {
       double full = m_grid.GetFullSitePercentage();
       if((m_haltAfterAEPS > 0 && m_AEPS > m_haltAfterAEPS)
@@ -1576,6 +1619,7 @@ namespace MFM
         abort();
        },
        {
+	 RunAudioHelper();
          RunHelper();
          LOG.Message("Simulation driver exiting");
        });

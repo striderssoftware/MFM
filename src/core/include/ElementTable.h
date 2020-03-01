@@ -51,6 +51,13 @@ namespace MFM
     //XXX currently deprecated    enum { ELEMENT_DATA_SLOTS = P::ELEMENT_DATA_SLOTS};
 
   public:
+
+    /**
+     * GetAudioEventsTest.
+     * VDT
+     */
+    u64  GetAudioEventsTest();
+    
     // -3 to avoid 2**k and 2**k-1 sizes; they seem to beat against type assignments
     static const u32 SIZE = (1u<<(B/2)) - 3; // ~250
 
@@ -228,7 +235,7 @@ namespace MFM
     u64 * GetDataAndRegister(const u32 elementType, u32 slots) ;
 
     u64 * GetDataIfRegistered(const u32 elementType, u32 slots) ;
-
+    
   private:
 
     /**

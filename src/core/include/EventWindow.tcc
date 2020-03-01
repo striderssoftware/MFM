@@ -38,7 +38,7 @@ namespace MFM {
     }
 
     ExecuteBehavior();
-
+    
     m_ewState = FREE;
     return true;
   }
@@ -69,6 +69,8 @@ namespace MFM {
     RecordEventAtTileCoord(tcenter);
     ExecuteEvent();
 
+    t.ProcessAudio();
+    
     return true;
   }
 
