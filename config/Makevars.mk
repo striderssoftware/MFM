@@ -65,6 +65,9 @@ COMMON_FLAGS+= -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers
 # not reliable enough: COMMON_CPPFLAGS+=-Wmissing-noreturn -ansi -pedantic -D SHARED_DIR=\"$(SHARED_DIR)\" -pthread
 COMMON_CPPFLAGS+=-ansi -pedantic -D SHARED_DIR=\"$(SHARED_DIR)\" -pthread
 COMMON_LDFLAGS+=-Wl,--fatal-warnings -pthread
+# Urgh gcc 8.3 warns about parens I want to keep
+COMMON_CPPFLAGS+=-Wno-parentheses
+#COMMON_CPPFLAGS+= -std=c++11
 
 # Ubuntu 12.04 needs this for clock_gettime
 override LIBS+=-lrt
