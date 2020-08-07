@@ -166,7 +166,8 @@ namespace MFM {
     if( mods & KMOD_CTRL) bs.Printf("C-");
     if( mods & KMOD_ALT) bs.Printf("M-");
     if( mods & KMOD_SHIFT) bs.Printf("S-");
-    bs.Printf("%s", SDL_GetKeyName((SDLKey) keysym));
+    
+    //bs.Printf("%s", SDL_GetKeyName((SDLKey) keysym));
   }
 
   const Keyboard::KeyEntry * Keyboard::FindSecOrdEntry(u32 section, u32 order) const

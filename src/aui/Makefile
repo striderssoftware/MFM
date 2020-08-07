@@ -10,6 +10,8 @@ BASEDIR:=../..
 # TODO VDT get this working so MicMonitor will be built as part of building the MFM
 #include $(BASEDIR)/src/aui/MonitorMake.mk   
 
+override LIBS+=-lSDL2 -lSDL2_mixer
+
 # Do the library thing
 include $(BASEDIR)/config/Makelib.mk
 

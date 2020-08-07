@@ -8,11 +8,13 @@ namespace MFM
     switch (event.type) {
     case SDL_MOUSEBUTTONUP: {
       switch (event.button) {
+#ifdef SDL2PORT
       case SDL_BUTTON_WHEELUP:
         return ScrollUp();
       case SDL_BUTTON_WHEELDOWN:
         return ScrollDown();
       default:
+#endif
         return Click(at, event.button, 0);  // XXX Get modifiers
       }
       break;

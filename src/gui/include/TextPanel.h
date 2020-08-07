@@ -204,6 +204,7 @@ namespace MFM {
           }
           break;
 
+#ifdef SDLPORT
         case SDL_BUTTON_WHEELUP:
         case SDL_BUTTON_WHEELDOWN:
           s32 dir = event.button == SDL_BUTTON_WHEELDOWN ? -1 : 1;
@@ -211,6 +212,8 @@ namespace MFM {
 
           m_bottomLineShown = MAX<s32>(0, MIN<s32>(m_bottomLineShown + dir, m_textLines - m_linesInPanel));
           break;
+#endif
+	  
         }
         return true;
       }

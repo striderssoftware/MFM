@@ -9,7 +9,7 @@ override INCLUDES += -I $(BASEDIR)/src/core/include -I $(BASEDIR)/src/elements/i
 
 # What we need to link
 override LIBS += -L $(BASEDIR)/build/core/ -L $(BASEDIR)/build/sim/ -L $(BASEDIR)/build/gui/ -L $(BASEDIR)/build/aui/
-override LIBS += -lmfmgui -lmfmsim -lmfmcore -lmfmaui -lSDL -lSDL_ttf -lSDL_image -lpng -lm
+override LIBS += -lmfmgui -lmfmsim -lmfmcore -lmfmaui -lSDL2 -lSDL2_ttf -lSDL2_image -lpng -lm
 
 # Do the program thing
 include $(BASEDIR)/config/Makeprog.mk

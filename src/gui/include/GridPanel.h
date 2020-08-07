@@ -769,6 +769,8 @@ namespace MFM
                       mbe.m_event.button.y,
                       mbe.m_keyboardModifiers);
           break;
+
+#ifdef SDLPORT
         case SDL_BUTTON_WHEELUP:
           {
             u32 newDit;
@@ -792,7 +794,8 @@ namespace MFM
             }
             break;
           }
-        }
+#endif
+	}
       }
       return false;
     }

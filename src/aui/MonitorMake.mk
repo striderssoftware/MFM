@@ -3,7 +3,8 @@ OFILES = $(BUILDDIR)/MicMonitor.o
 ALLDEP = Makefile
 
 CC = g++
-CCFLAGS = -g -Wall -pedantic -std=gnu++17
+CCFLAGS = -g -Wall -pedantic -std=gnu++11
+
 CXXFLAGS =
 INCL = 
 LDFLAGS =

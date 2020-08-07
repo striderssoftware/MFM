@@ -28,9 +28,9 @@
 #ifndef ASSETMANAGER_H
 #define ASSETMANAGER_H
 
-#include "SDL_image.h"
-#include "SDL.h"
-#include "SDL_ttf.h"
+#include "SDL2/SDL_image.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include "Logger.h"
 #include "Utils.h"
 #include "Point.h"
@@ -266,11 +266,9 @@ namespace MFM
   };
 
 
-
   class AssetManager
   {
   private:
-
     static SDL_Surface* surfaces[IMAGE_ASSET_COUNT];
 
     static TTF_Font* fonts[FONT_ASSET_COUNT];
@@ -279,7 +277,7 @@ namespace MFM
 
     static bool initialized;
 
-    static SDL_Surface* LoadImage(const char* relativeFilename)
+    static SDL_Surface* LoadImage(const char* relativeFilename, SDL_Surface* screen)
     {
       OString512 path;
       SDL_Surface* loaded = NULL;
@@ -292,7 +290,7 @@ namespace MFM
 
         if(loaded)
         {
-          opped = SDL_DisplayFormatAlpha(loaded);
+	  opped = SDL_ConvertSurface(loaded, screen->format, 0);
 
           SDL_FreeSurface(loaded);
 
@@ -362,11 +360,11 @@ namespace MFM
      * Initializes all held Assets. This should only be called once a
      * screen has been created by SDL_SetVideoMode .
      */
-    static void Initialize()
+    static void Initialize(SDL_Surface* screen)
     {
       if(!initialized)
       {
-        surfaces[IMAGE_ASSET_MASTER_ICON_ZSHEET] = LoadImage("images/mfms-icons-ZSHEET.png");
+        surfaces[IMAGE_ASSET_MASTER_ICON_ZSHEET] = LoadImage("images/mfms-icons-ZSHEET.png", screen);
 
         fonts[FONT_ASSET_ELEMENT] = LoadFont(ASSETMANAGER_FIX_FONT, 26);
         fonts[FONT_ASSET_ELEMENT_BIG] = LoadFont(ASSETMANAGER_FIX_FONT, 40);

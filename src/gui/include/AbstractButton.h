@@ -149,8 +149,7 @@ namespace MFM
       if (IsEnabled())
       {
         // Ignore wheelies
-        if(event.m_event.button.button != SDL_BUTTON_WHEELUP &&
-           event.m_event.button.button != SDL_BUTTON_WHEELDOWN)
+	if(event.m_event.type != SDL_MOUSEWHEEL)
         {
           if (event.m_event.type == SDL_MOUSEBUTTONUP)      // Click on up
           {

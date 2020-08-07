@@ -54,8 +54,8 @@
 #include "Camera.h"
 #include "AbstractDriver.h"
 #include "VArguments.h"
-#include "SDL.h"
-#include "SDL_ttf.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include "HelpPanel.h"
 #include "MovablePanel.h"
 #include "AbstractGUIDriverButtons.h"
@@ -96,7 +96,10 @@ namespace MFM
     s32 m_backupStdout;
 
     Camera m_camera;
-    SDL_Surface* m_screen;
+    SDL_Surface* m_oldscreen;
+    SDL_Texture* m_screen;
+    SDL_Window* m_window;
+    SDL_Renderer* m_renderer;
     Panel m_rootPanel;
     Drawing m_rootDrawing;
 
@@ -280,7 +283,7 @@ namespace MFM
       InsertAndRegisterButton(m_pauseTileButton);
       InsertAndRegisterButton(m_quitButton);
 
-      m_screenshotButton.SetScreen(m_screen);
+      m_screenshotButton.SetScreen(m_oldscreen);
       m_screenshotButton.SetCamera(&m_camera);
 
       m_buttonPanel.Insert(&m_replayPanel,0);
@@ -571,10 +574,24 @@ namespace MFM
           exit(-1);
         }
 
-        // This done later in setscreensize..
-        // SDL_Surface * s = SDL_SetVideoMode(1920, 1080, 32, SDL_SWSURFACE|SDL_NOFRAME);
+        if (m_window == 0)
+        {
+	  m_window = SDL_CreateWindow(MFM_VERSION_STRING_LONG,
+				     SDL_WINDOWPOS_UNDEFINED,
+				     SDL_WINDOWPOS_UNDEFINED,
+				     m_screenWidth, m_screenHeight,
+				     SDL_SWSURFACE|SDL_WINDOW_BORDERLESS);
+	}
+	m_renderer = SDL_CreateSoftwareRenderer(SDL_GetWindowSurface(m_window));
 
-        LOG.Message("SDL initialized for batch mode");
+	m_screen = SDL_CreateTexture(m_renderer,
+                               SDL_PIXELFORMAT_ARGB8888,
+                               SDL_TEXTUREACCESS_STREAMING,
+                               640, 480);
+
+	m_oldscreen = SDL_GetWindowSurface(m_window);
+
+	LOG.Message("SDL initialized for batch mode");
       }
       else
       {
@@ -648,8 +665,6 @@ namespace MFM
       m_gridPanel.Insert(&m_statisticsPanel, NULL);
 
       //Getting pretty long..      m_rootPanel.Print(STDOUT);
-
-      SDL_WM_SetCaption(MFM_VERSION_STRING_LONG, NULL);
 
       //m_ticksLastStopped = 0;
 
@@ -1168,26 +1183,28 @@ namespace MFM
       m_screenWidth = width;
       m_screenHeight = height;
       u32 flags = SDL_SWSURFACE;
-      if (m_screenResizable) flags |= SDL_RESIZABLE;
-      m_screen = SDL_SetVideoMode(m_screenWidth, m_screenHeight, 32, flags);
+#ifdef SDL2PORT
+      if (m_screenResizable) flags |= SDL_WINDOW_RESIZABLE;
+#endif
+      if ( m_window == 0 || m_screen == 0 )
+	{
+	  m_window = SDL_CreateWindow(MFM_VERSION_STRING_LONG,
+				      SDL_WINDOWPOS_UNDEFINED,
+				      SDL_WINDOWPOS_UNDEFINED,
+				      m_screenWidth, m_screenHeight,
+				      flags);
+	}
 
-      if (m_screen == 0)
-      {
-        LOG.Error("SDL_SetVideoMode(%d,%d,32,0x%x) failed: %s",
-		  m_screenWidth, m_screenHeight, flags,
-		  SDL_GetError());
-        FAIL(ILLEGAL_STATE);
-      }
+      m_oldscreen = SDL_GetWindowSurface(m_window);
 
-
-      u32 gotWidth = SDL_GetVideoSurface()->w;
-      u32 gotHeight = SDL_GetVideoSurface()->h;
+      u32 gotWidth = SDL_GetWindowSurface(m_window)->w;
+      u32 gotHeight = SDL_GetWindowSurface(m_window)->h;
       if (gotWidth != m_screenWidth || gotHeight != m_screenHeight)
         LOG.Message("Screen %dx%d (wanted %dx%d)",
                     gotWidth, gotHeight,
                     m_screenWidth, m_screenHeight);
 
-      AssetManager::Initialize();
+      AssetManager::Initialize(m_oldscreen);
 
       UPoint newDimensions(width, height);
 
@@ -1200,7 +1217,7 @@ namespace MFM
       m_rootPanel.SetBackground(Drawing::RED);
       m_rootPanel.HandleResize(newDimensions);
 
-      m_rootDrawing.Reset(m_screen, FONT_ASSET_ELEMENT);
+      m_rootDrawing.Reset(m_oldscreen, FONT_ASSET_ELEMENT);
 
 #if 0
       TileRenderer& tileRenderer = m_grend.GetTileRenderer();
@@ -1246,11 +1263,11 @@ namespace MFM
           default:
             LOG.Debug("Unhandled SDL event type %d", event.type);
             break;
-
+#ifdef SDLPORT
           case SDL_VIDEORESIZE:
             SetScreenSize(event.resize.w, event.resize.h);
             break;
-
+#endif
           case SDL_QUIT:
             running = false;
             break;
@@ -1335,7 +1352,7 @@ namespace MFM
           const char * path = Super::GetSimDirPathTemporary("screenshot/%D-%D.png",
                                                             m_thisEpochAEPS,
                                                             0);
-          m_camera.DrawSurface(m_screen,path);
+          m_camera.DrawSurface(m_oldscreen,path);
         }
         Update(Super::GetGrid());
 
@@ -1350,7 +1367,7 @@ namespace MFM
           {
             const char * path = Super::GetSimDirPathTemporary("vid/%D.png", m_thisEpochAEPS);
 
-            m_camera.DrawSurface(m_screen,path);
+            m_camera.DrawSurface(m_oldscreen,path);
           }
         }
 
@@ -1358,12 +1375,12 @@ namespace MFM
         running &= wantOut;  // Don't reset running if it was already false
         if (!m_screenUpdateDisabled)
         {
-          SDL_Flip(m_screen);
+          SDL_UpdateWindowSurface(m_window);
         }
       }
 
       AssetManager::Destroy();
-      SDL_FreeSurface(m_screen);
+      SDL_FreeSurface(m_oldscreen);
       TTF_Quit();
       SDL_Quit();
     }

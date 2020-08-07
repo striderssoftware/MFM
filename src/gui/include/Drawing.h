@@ -30,8 +30,8 @@
 
 #include "AssetManager.h"
 #include "itype.h"
-#include "SDL.h"         /* For SDL_Surface, SDL_Color */
-#include "SDL_ttf.h"     /* For TTF_Font, at least */
+#include "SDL2/SDL.h"         /* For SDL_Surface, SDL_Color */
+#include "SDL2/SDL_ttf.h"     /* For TTF_Font, at least */
 #include "Rect.h"
 #include "Tile.h"
 #include "Drawable.h"

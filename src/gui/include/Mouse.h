@@ -30,7 +30,7 @@
 #include <set>
 #include "itype.h"
 #include "Point.h"
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 namespace MFM {
 

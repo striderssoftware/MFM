@@ -929,6 +929,7 @@ namespace MFM
         return true;
       }
 
+#ifdef SDLPORT
       if(m_selectedToolButton)
       {
         GridToolShapeUpdater<GC> & gt = m_selectedToolButton->GetGridTool();
@@ -939,7 +940,8 @@ namespace MFM
              event.button == SDL_BUTTON_WHEELDOWN))
           gt.Press(mbe);
       }
-
+#endif
+      
       return true;
     }
 

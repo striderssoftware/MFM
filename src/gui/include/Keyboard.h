@@ -28,7 +28,7 @@
 #define KEYBOARD_H
 
 #include <set>
-#include "SDL.h"
+#include "SDL2/SDL.h"
 #include "itype.h"
 #include "Fail.h"
 #include "ByteSink.h"

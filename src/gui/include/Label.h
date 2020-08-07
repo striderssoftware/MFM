@@ -29,8 +29,8 @@
 #define LABEL_H
 
 #include "itype.h"
-#include "SDL.h"
-#include "SDL_ttf.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include "Point.h"
 #include "MovablePanel.h"
 #include "Drawing.h"

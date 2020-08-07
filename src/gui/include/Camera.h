@@ -29,7 +29,7 @@
 #define CAMERA_H
 
 #include "itype.h"
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 namespace MFM
 {

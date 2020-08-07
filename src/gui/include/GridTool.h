@@ -246,6 +246,8 @@ namespace MFM
     virtual void Press(MouseButtonEvent & event)
     {
       SDL_MouseButtonEvent & mb = event.m_event.button;
+
+#ifdef SDLPORT
       bool uppity = false;
       if ((uppity = (mb.button == SDL_BUTTON_WHEELUP)) ||
           mb.button == SDL_BUTTON_WHEELDOWN)
@@ -255,7 +257,8 @@ namespace MFM
         else if (m_toolRadius > 1) --m_toolRadius;
         return;
       }
-
+#endif
+      
       m_mainFunction = (mb.button == SDL_BUTTON_LEFT);
       m_initiateFunction = true;
 
