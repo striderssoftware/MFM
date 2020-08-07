@@ -19,9 +19,9 @@
 #define AUDIO_H
 
 
-#define DOAUDIO = true;
-#define DOAUDIOINPUT = true;
-#define DOAUDIOLOGGING = true;
+//#define DOAUDIO;
+//#define DOAUDIOINPUT;
+//#define DOAUDIOLOGGING;
 //#define AUDIONOTYET = true;    
 
 #include <iostream>
@@ -204,10 +204,13 @@ namespace MFM
       readbuf[read_bytes] = '\0';
       LOG.Message("Received a message in namedPipe");
 
-#endif
-
+      
       //TODO the messages are "pings", no need to check message contents.
       return true;  // There WAS an audioEvent
+
+#endif
+
+      return false;
     }
     
   private:
