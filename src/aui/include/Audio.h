@@ -22,7 +22,7 @@
 //#define DOAUDIO;
 //#define DOAUDIOINPUT;
 //#define DOAUDIOLOGGING;
-//#define AUDIONOTYET = true;    
+//#define AUDIONOTYET;
 
 #include <iostream>
 
@@ -208,9 +208,10 @@ namespace MFM
       //TODO the messages are "pings", no need to check message contents.
       return true;  // There WAS an audioEvent
 
-#endif
+#else
 
       return false;
+#endif
     }
     
   private:
