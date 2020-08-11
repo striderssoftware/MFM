@@ -929,18 +929,14 @@ namespace MFM
         return true;
       }
 
-#ifdef SDLPORT
       if(m_selectedToolButton)
       {
         GridToolShapeUpdater<GC> & gt = m_selectedToolButton->GetGridTool();
         u32 radius = gt.GetRadius();
 
-        if (radius > 0 &&
-            (event.button == SDL_BUTTON_WHEELUP ||
-             event.button == SDL_BUTTON_WHEELDOWN))
+	if (radius > 0 && event.type == SDL_MOUSEWHEEL)
           gt.Press(mbe);
       }
-#endif
       
       return true;
     }

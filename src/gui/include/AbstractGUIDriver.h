@@ -97,7 +97,8 @@ namespace MFM
 
     Camera m_camera;
     SDL_Surface* m_oldscreen;
-    SDL_Texture* m_screen;
+    SDL_Surface* m_screen;
+    //SDL_Texture* m_screen; //TODO SDL2PORT if m_screen stays an SDL_Surface remove m_oldscreen
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
     Panel m_rootPanel;
@@ -182,6 +183,76 @@ namespace MFM
 
   public:
     static AbstractGUIDriver * getSelf() { return m_staticSelf; }
+
+    //SDL2PORT Latest attempt
+    void CreateWindows()
+    {
+      //SDL2PORT - origional calls to "create" did NOT have a gaurd. i.e - if (m_window)
+      //if (m_window)
+      //return;
+      
+      SDL_Init(SDL_INIT_VIDEO);
+      
+      //SDL2PORT - old create flag: u32 flags = SDL_SWSURFACE;      
+      m_window = SDL_CreateWindow(MFM_VERSION_STRING_LONG, SDL_WINDOWPOS_UNDEFINED,
+				  SDL_WINDOWPOS_UNDEFINED, m_screenWidth,
+				  m_screenHeight, 0);
+      
+#ifdef SDL2PORT
+      //SDL2PORT - old create flag: u32 flags = SDL_SWSURFACE;
+      // can this be captured with a SDL_Set call.
+      if (m_screenResizable)
+	SDL_SetWindowResizable(m_window, SDL_TRUE);
+      
+      SDL_SetWindowBorderd(m_window, SDL_TRUE);
+#endif      
+
+      m_oldscreen = SDL_GetWindowSurface(m_window);
+       m_screen = m_oldscreen;
+
+      if (!m_screen || !m_oldscreen){
+	  FAIL(ILLEGAL_STATE);
+      }
+    }// END createWindows
+
+    
+    /*
+    // First Attempt - simpler impl in current CreateWindows
+    */
+    void CreateWindowsRemoveMe()
+    {
+      if ( m_window)
+	return;
+      
+      SDL_Init(SDL_INIT_VIDEO); // init video
+	    
+      if ( SDL_CreateWindowAndRenderer(m_screenWidth, m_screenHeight,
+				       SDL_SWSURFACE|SDL_WINDOW_BORDERLESS,
+				       &m_window,
+				       &m_renderer) < 0)
+	{
+	  LOG.Error("SDL_CreateWindowAndRenderer failed: %s", SDL_GetError() );
+	}
+      
+	SDL_SetWindowTitle(m_window, MFM_VERSION_STRING_LONG);
+	
+#ifdef SDL2PORT
+      if (m_screenResizable)
+	SDL_SetWindowResizable(m_window, SDL_TRUE);
+
+      SDL_SetWindowBorderd(m_window, SDL_TRUE);
+#endif
+	m_screen = SDL_CreateTexture(m_renderer,
+                               SDL_PIXELFORMAT_ARGB8888,
+                               SDL_TEXTUREACCESS_STREAMING,
+                               m_screenWidth, m_screenHeight);
+
+	m_oldscreen = SDL_GetWindowSurface(m_window);
+
+	if (!m_screen || !m_oldscreen){
+	  FAIL(ILLEGAL_STATE);
+	}
+    }
     
     const Panel & GetRootPanel() const { return m_rootPanel; }
     Panel & GetRootPanel() { return m_rootPanel; }
@@ -574,22 +645,8 @@ namespace MFM
           exit(-1);
         }
 
-        if (m_window == 0)
-        {
-	  m_window = SDL_CreateWindow(MFM_VERSION_STRING_LONG,
-				     SDL_WINDOWPOS_UNDEFINED,
-				     SDL_WINDOWPOS_UNDEFINED,
-				     m_screenWidth, m_screenHeight,
-				     SDL_SWSURFACE|SDL_WINDOW_BORDERLESS);
-	}
-	m_renderer = SDL_CreateSoftwareRenderer(SDL_GetWindowSurface(m_window));
-
-	m_screen = SDL_CreateTexture(m_renderer,
-                               SDL_PIXELFORMAT_ARGB8888,
-                               SDL_TEXTUREACCESS_STREAMING,
-                               640, 480);
-
-	m_oldscreen = SDL_GetWindowSurface(m_window);
+	//SDLPORT - origional this was not called
+	//CreateWindows();
 
 	LOG.Message("SDL initialized for batch mode");
       }
@@ -1182,21 +1239,9 @@ namespace MFM
     {
       m_screenWidth = width;
       m_screenHeight = height;
-      u32 flags = SDL_SWSURFACE;
-#ifdef SDL2PORT
-      if (m_screenResizable) flags |= SDL_WINDOW_RESIZABLE;
-#endif
-      if ( m_window == 0 || m_screen == 0 )
-	{
-	  m_window = SDL_CreateWindow(MFM_VERSION_STRING_LONG,
-				      SDL_WINDOWPOS_UNDEFINED,
-				      SDL_WINDOWPOS_UNDEFINED,
-				      m_screenWidth, m_screenHeight,
-				      flags);
-	}
 
-      m_oldscreen = SDL_GetWindowSurface(m_window);
-
+      CreateWindows();
+      
       u32 gotWidth = SDL_GetWindowSurface(m_window)->w;
       u32 gotHeight = SDL_GetWindowSurface(m_window)->h;
       if (gotWidth != m_screenWidth || gotHeight != m_screenHeight)
@@ -1263,11 +1308,9 @@ namespace MFM
           default:
             LOG.Debug("Unhandled SDL event type %d", event.type);
             break;
-#ifdef SDLPORT
-          case SDL_VIDEORESIZE:
-            SetScreenSize(event.resize.w, event.resize.h);
+          case SDL_WINDOWEVENT_RESIZED:
+            SetScreenSize(event.window.data1, event.window.data2);
             break;
-#endif
           case SDL_QUIT:
             running = false;
             break;
@@ -1381,6 +1424,7 @@ namespace MFM
 
       AssetManager::Destroy();
       SDL_FreeSurface(m_oldscreen);
+      SDL_DestroyWindow(m_window);
       TTF_Quit();
       SDL_Quit();
     }
