@@ -96,9 +96,7 @@ namespace MFM
     s32 m_backupStdout;
 
     Camera m_camera;
-    SDL_Surface* m_oldscreen;
     SDL_Surface* m_screen;
-    //SDL_Texture* m_screen; //TODO SDL2PORT if m_screen stays an SDL_Surface remove m_oldscreen
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
     Panel m_rootPanel;
@@ -191,7 +189,6 @@ namespace MFM
       //if (m_window)
       //return;
       
-      SDL_FreeSurface(m_oldscreen);
       SDL_FreeSurface(m_screen);
       SDL_DestroyWindow(m_window);
 
@@ -209,53 +206,13 @@ namespace MFM
       SDL_SetWindowBorderd(m_window, SDL_TRUE);
 #endif      
 
-      m_oldscreen = SDL_GetWindowSurface(m_window);
-      m_screen = m_oldscreen;
+      m_screen = SDL_GetWindowSurface(m_window);
 
-      if (!m_screen || !m_oldscreen){
+      if (!m_screen ){
 	  FAIL(ILLEGAL_STATE);
       }
     }// END createWindows
 
-    
-    /*
-    // First Attempt - simpler impl in current CreateWindows
-    */
-    void CreateWindowsRemoveMe()
-    {
-      if ( m_window)
-	return;
-      
-      SDL_Init(SDL_INIT_VIDEO); // init video
-	    
-      if ( SDL_CreateWindowAndRenderer(m_screenWidth, m_screenHeight,
-				       SDL_SWSURFACE|SDL_WINDOW_BORDERLESS,
-				       &m_window,
-				       &m_renderer) < 0)
-	{
-	  LOG.Error("SDL_CreateWindowAndRenderer failed: %s", SDL_GetError() );
-	}
-      
-	SDL_SetWindowTitle(m_window, MFM_VERSION_STRING_LONG);
-	
-#ifdef SDL2PORT
-      if (m_screenResizable)
-	SDL_SetWindowResizable(m_window, SDL_TRUE);
-
-      SDL_SetWindowBorderd(m_window, SDL_TRUE);
-#endif
-	m_screen = SDL_CreateTexture(m_renderer,
-                               SDL_PIXELFORMAT_ARGB8888,
-                               SDL_TEXTUREACCESS_STREAMING,
-                               m_screenWidth, m_screenHeight);
-
-	m_oldscreen = SDL_GetWindowSurface(m_window);
-
-	if (!m_screen || !m_oldscreen){
-	  FAIL(ILLEGAL_STATE);
-	}
-    }
-    
     const Panel & GetRootPanel() const { return m_rootPanel; }
     Panel & GetRootPanel() { return m_rootPanel; }
 
@@ -356,7 +313,7 @@ namespace MFM
       InsertAndRegisterButton(m_pauseTileButton);
       InsertAndRegisterButton(m_quitButton);
 
-      m_screenshotButton.SetScreen(m_oldscreen);
+      m_screenshotButton.SetScreen(m_screen);
       m_screenshotButton.SetCamera(&m_camera);
 
       m_buttonPanel.Insert(&m_replayPanel,0);
@@ -1251,7 +1208,7 @@ namespace MFM
                     gotWidth, gotHeight,
                     m_screenWidth, m_screenHeight);
 
-      AssetManager::Initialize(m_oldscreen);
+      AssetManager::Initialize(m_screen);
 
       UPoint newDimensions(width, height);
 
@@ -1264,7 +1221,7 @@ namespace MFM
       m_rootPanel.SetBackground(Drawing::RED);
       m_rootPanel.HandleResize(newDimensions);
 
-      m_rootDrawing.Reset(m_oldscreen, FONT_ASSET_ELEMENT);
+      m_rootDrawing.Reset(m_screen, FONT_ASSET_ELEMENT);
 
 #if 0
       TileRenderer& tileRenderer = m_grend.GetTileRenderer();
@@ -1397,7 +1354,7 @@ namespace MFM
           const char * path = Super::GetSimDirPathTemporary("screenshot/%D-%D.png",
                                                             m_thisEpochAEPS,
                                                             0);
-          m_camera.DrawSurface(m_oldscreen,path);
+          m_camera.DrawSurface(m_screen,path);
         }
         Update(Super::GetGrid());
 
@@ -1412,7 +1369,7 @@ namespace MFM
           {
             const char * path = Super::GetSimDirPathTemporary("vid/%D.png", m_thisEpochAEPS);
 
-            m_camera.DrawSurface(m_oldscreen,path);
+            m_camera.DrawSurface(m_screen,path);
           }
         }
 
@@ -1425,7 +1382,7 @@ namespace MFM
       }
 
       AssetManager::Destroy();
-      SDL_FreeSurface(m_oldscreen);
+      SDL_FreeSurface(m_screen);
       SDL_DestroyWindow(m_window);
       TTF_Quit();
       SDL_Quit();
