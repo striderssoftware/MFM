@@ -1,7 +1,9 @@
 
 Building on: Ubuntu 20.04.1 LTS 64-bit in a VM (VMWare)
 
-This branch is now using SDL2.
+This branch is using c++11
+
+This branch is using SDL2.
 Here are additional package dependencies:
 libsdl-image2.0-dev
 libsdl-ttf2.0-dev
