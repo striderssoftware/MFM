@@ -1,0 +1,19 @@
+
+Building on: Ubuntu 20.04.1 LTS 64-bit in a VM (VMWare)
+
+This branch is now using SDL2.
+Here are additional package dependencies:
+libsdl-image2.0-dev
+libsdl-ttf2.0-dev
+libsdl2-2.0
+libsdl2-dev
+libsdl2-doc
+libsdl2-mixer-2.0-0
+libsdl2-mixer-dev
+
+
+Other additional packages needed - not referenced by the quickStartScript :
+
+The package: File::ShareDir::Install was needed. (SPLAT Makefile.pl)
+libfile-sharedir-install-perl
+
