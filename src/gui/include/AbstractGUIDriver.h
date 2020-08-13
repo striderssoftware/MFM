@@ -191,8 +191,10 @@ namespace MFM
       //if (m_window)
       //return;
       
-      SDL_Init(SDL_INIT_VIDEO);
-      
+      SDL_FreeSurface(m_oldscreen);
+      SDL_FreeSurface(m_screen);
+      SDL_DestroyWindow(m_window);
+
       //SDL2PORT - old create flag: u32 flags = SDL_SWSURFACE;      
       m_window = SDL_CreateWindow(MFM_VERSION_STRING_LONG, SDL_WINDOWPOS_UNDEFINED,
 				  SDL_WINDOWPOS_UNDEFINED, m_screenWidth,
@@ -208,7 +210,7 @@ namespace MFM
 #endif      
 
       m_oldscreen = SDL_GetWindowSurface(m_window);
-       m_screen = m_oldscreen;
+      m_screen = m_oldscreen;
 
       if (!m_screen || !m_oldscreen){
 	  FAIL(ILLEGAL_STATE);
