@@ -13,9 +13,9 @@ namespace MFM
         return ScrollUp();
       case SDL_BUTTON_WHEELDOWN:
         return ScrollDown();
-      default:
 #endif
-        return Click(at, event.button, 0);  // XXX Get modifiers
+      default:
+        return Click(at, event.button, 0);  // XXX Get modifiers                                                                      
       }
       break;
     }
@@ -26,5 +26,4 @@ namespace MFM
     }
     return false;
   }
-
 }
