@@ -1,0 +1,24 @@
+
+
+--------------------------------------------------------------------
+the following (SDL) packages were installed on my Ubuntu 19.04 VM:
+
+   libsdl2-2.0-0
+   libsdl2-dbg
+   libsdl2-dev
+   libsdl2-doc
+   libsdl2-mixer-2.0-0
+   libsdl2-mixer-dev
+
+--------------------------------------------------------------------
+BeagleGreen:
+
+When installing on a BeagleGreen I was not able to install them all, but WAS able to install enough for the app to build/run
+I installed (VERIFY THIS)
+libsdl2-2.0-0
+libsdl2-dev
+libsdl2-mixer-2.0-0
+libsdl2-mixer-dev
+
+--------------------------------------------------------------------
+

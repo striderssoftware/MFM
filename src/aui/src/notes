@@ -1,0 +1,47 @@
+
+Sound  Persistence:
+   GUI is persisted on the screen even though the event window is processing/changing 
+   a small part of the "world". 
+   How would one persist the sound while the event window was processing another part of
+   the "world".   Instead of playing some sort of data file (wave, mp3 etc...) I think 
+   more of using a synthizer to create these sounds and so the synthesizer would be to sound 
+   what the screen is to visual aspects.  
+
+
+The main Problem to solve is:
+Figure out what I want to do.
+
+
+the simpilist start: (Frequency)
+The current MFM Audio implementation plays a sound (wave file) for 1 sec each time an Element moves. Get that working with a synth.
+1. The audio associated with the Elements has no other attributes then Frequency
+2. The Duration is hard codded.
+3. The Volume is Hard codded.
+
+
+Next: (Frequency, Duration)
+1. The audio associated with the Elements has no other attributes then Frequency
+2. Volume is the same for all elements.
+3. Duration is the lifspan of the Element. (Even when the EW is processing another portion of the world).
+4. If x > 1 where x isa Element/Frequency playing in the world. Only one x will be produced.
+   Note: this could become a Volume computation.
+
+
+Next: (Volume, Frequency, Duration)
+1. The audio associated with the Elements has no other attributes then Frequency
+2. Volume is the same for all elements.
+3. Duration is the lifspan of the Element. (Even when the EW is processing another portion of the world).
+4. If x > 1 where x isa Element/Frequency playing in the world. Only one x will be produced but the Volume of this x should
+   be directly proportional to the Number of Elements with this frequency.
+
+
+Event Window:
+Once Frequency, Volume, and Duration are working, Only play the sounds that are currentlly in the Event Window. If an element is outside the
+Event Window its sound will not be played.
+
+
+
+Misc:
+For this repo:URL: svn+ssh://dlucero@svn/svn/dev/users/dlucero/T2_SynthSounds
+Revision: 134720 was built, ran, tested - worked- on a BeagleGreen (03/09/2020)
+
