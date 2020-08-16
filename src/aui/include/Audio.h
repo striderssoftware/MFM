@@ -38,8 +38,7 @@ using namespace std;
 
 namespace MFM
 {
- static bool initialize = true;
-  
+
   class Audio 
   {
 
@@ -47,15 +46,10 @@ namespace MFM
 
     Audio()
     {
-#ifdef DOAUDIOINPUT
-      if ( initialize )
-	{
 #ifdef DOAUDIOLOGGING
       LOG.Message("Audio: constructor was called");
 #endif
-	  initialize = false;
-	}
-#endif
+      m_synth.Init();
     }
 
     virtual ~Audio()
@@ -82,11 +76,11 @@ namespace MFM
     bool ProcessAudio(u32 uSound)
     {
 #ifdef DOAUDIOLOGGING
-      //LOG.Message("Audio:  ProcessAudio - was called");
-      //LOG.Message("uSound was  %x", static_cast<int>(uSound));
+      LOG.Message("Audio:  ProcessAudio - was called");
+      LOG.Message("uSound was  %x", static_cast<int>(uSound));
 #endif
       
-      return true; // TODO SDL2PORT - uSound to double - PlaySound(uSound);
+      return PlaySound(uSound); // TODO SDL2PORT - uSound to double - PlaySound(uSound);
     }
 
     
@@ -129,7 +123,7 @@ namespace MFM
     bool PlaySound(u32 uSound)
     {
 #ifdef DOAUDIO
-          LOG.Message("uSound was  %x", static_cast<int>(uSound));
+          LOG.Message("Audio::PlaySound uSound was  %x", static_cast<int>(uSound));
           // TODO VDT play a sound  i.e. -  aplay wavFiles/error.wav
 
 	  m_synth.AddSound(uSound);

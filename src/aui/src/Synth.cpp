@@ -17,7 +17,7 @@ static  std::list<SoundGenerator*> SoundGeneratorList;
 
 Synth::Synth()
 {
-  cout << "Synth constructor was called" << endl;
+  cout << "*********Synth constructor was called" << endl;
 }
 
 Synth::~Synth()
@@ -30,6 +30,7 @@ Synth::~Synth()
 bool
 Synth::Init()
 {
+  SDL_Log("Synth::Init was called");
   uint32_t ech = 48000;  //TODO VDT ech - ech  i.e 48000 is a magic number, Figure this out.
   
   int iError = SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER);
@@ -87,6 +88,8 @@ Synth::Close()
 bool
 Synth::AddSound(double iFrequency)
 {
+
+  iFrequency = 440;
   cout << "Synth::AddSound was called. here is frequency:" << iFrequency << endl;
 
   SoundGenerator * psound = new SinusGenerator(1, iFrequency);
@@ -133,6 +136,8 @@ Synth::Test()
 void
 Synth::SynthAudioCallback(void *unused, Uint8 *byteStream, int byteStreamLength)
 {
+  //SDL_Log("SynthAudioCallback was called");
+
   if ( SoundGeneratorList.size() == 0 )
     return;
   
