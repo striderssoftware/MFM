@@ -7,10 +7,10 @@
 //TODO VDT - get rid of releative paths?
 #include "../../core/include/Logger.h"
 
-#define DOAUDIO
 //#define DOAUDIOINPUT
+#define DOAUDIOOUTPUT
 #define DOAUDIOLOGGING
-//#define AUDIONOTYET
+
 
 using namespace std;
 
@@ -54,14 +54,12 @@ bool MFM::Audio:: ProcessAudio(u32 uSound)
   return PlaySound(uSound); // TODO SDL2PORT - uSound to double - PlaySound(uSound);
 }
 
-
 /**
  * This WILL return an input stream of MIC data.
  *
  */
 istream*  MFM::Audio::GetAudio()
 {
-#ifdef AUDIONOTYET
 #ifdef DOAUDIOINPUT
   
 #ifdef DOAUDIOLOGGING
@@ -69,11 +67,10 @@ istream*  MFM::Audio::GetAudio()
 #endif
   
 #endif
-#endif
+
   istream* pMicInput;
   return pMicInput;
 }
-
 
 /**
  * This returns if there has been an Audio Event,
@@ -85,14 +82,13 @@ bool MFM::Audio::CheckForAudioEvent()
 }
 
 
-
 /**
  * This makes a system call to play a wav file.
  * currently this maps u32 values to wav files that are musical notes in the Western Tonal system. 
  */
 bool MFM::Audio::PlaySound(u32 uSound)
 {
-#ifdef DOAUDIO
+#ifdef DOAUDIOINPUT
   LOG.Message("Audio::PlaySound uSound was  %x", static_cast<int>(uSound));
   // TODO VDT play a sound  i.e. -  aplay wavFiles/error.wav
   
