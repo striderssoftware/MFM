@@ -194,7 +194,7 @@ Synth::CheckForAudioEvent()
 
   int maxVolume = -1;
 
-  Uint8 buf[1024];
+  Uint8 buf[4024];
   const Uint32 bytesRead = SDL_DequeueAudio(m_InputDevice, buf, sizeof (buf));
   if ( bytesRead < 1 ) {
     //cout << "CheckForAudioEvent is returning false no bytes read" << endl;
