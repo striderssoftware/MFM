@@ -50,6 +50,7 @@ namespace MFM
       LOG.Message("Audio: constructor was called");
 #endif
       m_synth.Init();
+      m_synth.BeginRecording();
     }
 
     virtual ~Audio()
@@ -110,9 +111,9 @@ namespace MFM
      */
     bool CheckForAudioEvent()
     {
-      return false;
-
+      return m_synth.CheckForAudioEvent();
     }
+
     
   private:
 

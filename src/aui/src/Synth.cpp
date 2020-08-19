@@ -34,7 +34,7 @@ bool
 Synth::Init()
 {
   bool bReturn = false;
-  bReturn =  Synth::InitOutput();
+  //bReturn =  Synth::InitOutput();
   bReturn = Synth::InitInput();
 
   return bReturn;
@@ -43,7 +43,7 @@ Synth::Init()
 bool
 Synth::InitOutput()
 {
-  SDL_Log("Synth::Init was called");
+  SDL_Log("Synth::InitOuput was called");
   uint32_t ech = 48000;  //TODO VDT ech - ech  i.e 48000 is a magic number, Figure this out.
   
   int iError = SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER);
@@ -84,6 +84,7 @@ Synth::InitOutput()
 bool
 Synth::InitInput()
 {
+  SDL_Log("Synth::InitInput was called");
   int iError = SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER);
   if (  iError != 0 )
     {
@@ -111,7 +112,7 @@ Synth::InitInput()
 bool
 Synth::BeginPlaying()
 {
-  SDL_PauseAudioDevice(m_OutputDevice, 0); /* start audio playing. */
+  //SDL_PauseAudioDevice(m_OutputDevice, 0); /* start audio playing. */
 
   return true;
 }
@@ -131,7 +132,7 @@ Synth::AddSound(double iFrequency)
 {
 
   iFrequency = 440;
-  cout << "Synth::AddSound was called. here is frequency:" << iFrequency << endl;
+  //cout << "Synth::AddSound was called. here is frequency:" << iFrequency << endl;
 
   SoundGenerator * psound = new SinusGenerator(1, iFrequency);
   SoundGeneratorList.push_front(psound);
@@ -192,36 +193,34 @@ Synth::CheckForAudioEvent()
   cout << "CheckForAudioEvent was called" << endl;
 
   int maxVolume = -1;
-  while (SDL_TRUE) {  //TODO VDT - This is the "apps" run loop.
-    Uint8 buf[1024];
-    const Uint32 bytesRead = SDL_DequeueAudio(m_InputDevice, buf, sizeof (buf));
-    if ( bytesRead < 1 ) {
-      continue;
-    }
 
-    //cout << "bytes read was:" <<  bytesRead << endl;
-    //OutputAudioSpecs();
-    
-    int count = bytesRead; //1024/8;                                                                                         
-    maxVolume = ComputeMaxPeak(&buf[0], count);
-
-    //TODO VDT - remove this when called from app 
-    //TODO VDT Volume seems to sensitive - check this once comput_max_peak is done.
-#define TESTING
-#ifdef TESTING
-    if ( maxVolume > VOLUME_THRESHOLD )
-      break;
-#endif
-    //cout << "CheckForAudioEvent maxVolume was: " << maxVolume << " returning true" << endl;
+  Uint8 buf[1024];
+  const Uint32 bytesRead = SDL_DequeueAudio(m_InputDevice, buf, sizeof (buf));
+  if ( bytesRead < 1 ) {
+    //cout << "CheckForAudioEvent is returning false no bytes read" << endl;
+    return false;
   }
-
+  
+  //cout << "bytes read was:" <<  bytesRead << endl;
+  //OutputAudioSpecs();
+  
+  int count = bytesRead; //1024/8;                                                                                         
+  maxVolume = ComputeMaxPeak(&buf[0], count);
+  
+  //TODO VDT - remove this 
+  //TODO VDT Volume seems to sensitive - check this once comput_max_peak is done.
+ //#define TESTING
+#ifdef TESTING
+  cout << "Synth::CheckForAudioEvent maxVolume was: " << maxVolume << " returning true" << endl;
+#endif
+  
   if ( maxVolume > VOLUME_THRESHOLD )
     {
       cout << "CheckForAudioEvent maxVolume was: " << maxVolume << " returning true" << endl;
       return true;
     }
+  
   return false;
-
 }
 
 void
