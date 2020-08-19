@@ -106,13 +106,15 @@ Synth::InitInput()
       cout << "Got buffer length : " << m_AudioSpecInputWant.samples << " wanted: " << BUF_LENGTH << endl;
     }
 
+  Synth::BeginRecording();
+  
   return true;
 }
 
 bool
 Synth::BeginPlaying()
 {
-  //SDL_PauseAudioDevice(m_OutputDevice, 0); /* start audio playing. */
+  SDL_PauseAudioDevice(m_OutputDevice, 0); /* start audio playing. */
 
   return true;
 }

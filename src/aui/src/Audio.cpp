@@ -7,8 +7,8 @@
 //TODO VDT - get rid of releative paths?
 #include "../../core/include/Logger.h"
 
-//#define DOAUDIOINPUT
-#define DOAUDIOOUTPUT
+#define DOAUDIOINPUT
+//#define DOAUDIOOUTPUT
 #define DOAUDIOLOGGING
 
 
@@ -20,7 +20,6 @@ MFM::Audio::Audio()
   LOG.Message("Audio: constructor was called");
 #endif
   m_synth.Init();
-  m_synth.BeginRecording();
 }
 
 MFM::Audio::~Audio()
@@ -50,6 +49,7 @@ bool MFM::Audio:: ProcessAudio(u32 uSound)
   LOG.Message("Audio:  ProcessAudio - was called");
   LOG.Message("uSound was  %x", static_cast<int>(uSound));
 #endif
+
   
   return PlaySound(uSound); // TODO SDL2PORT - uSound to double - PlaySound(uSound);
 }
@@ -78,7 +78,9 @@ istream*  MFM::Audio::GetAudio()
  */
 bool MFM::Audio::CheckForAudioEvent()
 {
+#ifdef DOAUDIOINPUT
   return m_synth.CheckForAudioEvent();
+#endif
 }
 
 
@@ -88,7 +90,7 @@ bool MFM::Audio::CheckForAudioEvent()
  */
 bool MFM::Audio::PlaySound(u32 uSound)
 {
-#ifdef DOAUDIOINPUT
+#ifdef DOAUDIOOUTPUT
   LOG.Message("Audio::PlaySound uSound was  %x", static_cast<int>(uSound));
   // TODO VDT play a sound  i.e. -  aplay wavFiles/error.wav
   
