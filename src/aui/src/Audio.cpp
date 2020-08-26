@@ -1,4 +1,5 @@
 #include "Audio.h"
+#include <unistd.h>
 
 #include <iostream>
 #include "AuiConstants.h"
@@ -7,10 +8,9 @@
 //TODO VDT - get rid of releative paths?
 #include "../../core/include/Logger.h"
 
-#define DOAUDIOINPUT
-//#define DOAUDIOOUTPUT
+//#define DOAUDIOINPUT
+#define DOAUDIOOUTPUT
 #define DOAUDIOLOGGING
-
 
 using namespace std;
 
@@ -45,11 +45,13 @@ bool MFM::Audio::AuiTestFunction(u32 uSound)
  */
 bool MFM::Audio:: ProcessAudio(u32 uSound)
 {
+  if ( uSound == 0 )
+    return true;
+
 #ifdef DOAUDIOLOGGING
   LOG.Message("Audio:  ProcessAudio - was called");
   LOG.Message("uSound was  %x", static_cast<int>(uSound));
 #endif
-
   
   return PlaySound(uSound); // TODO SDL2PORT - uSound to double - PlaySound(uSound);
 }
@@ -80,23 +82,25 @@ bool MFM::Audio::CheckForAudioEvent()
 {
 #ifdef DOAUDIOINPUT
   return m_synth.CheckForAudioEvent();
+#else
+  return false;
 #endif
 }
 
-
 /**
- * This makes a system call to play a wav file.
- * currently this maps u32 values to wav files that are musical notes in the Western Tonal system. 
+ * This uses the Synth class to play a frequency.
  */
 bool MFM::Audio::PlaySound(u32 uSound)
 {
 #ifdef DOAUDIOOUTPUT
   LOG.Message("Audio::PlaySound uSound was  %x", static_cast<int>(uSound));
-  // TODO VDT play a sound  i.e. -  aplay wavFiles/error.wav
-  
+
+  LOG.Message("Audio::PlaySound was called");
   m_synth.AddSound(uSound);
   m_synth.BeginPlaying();
-#endif      	  
+  
+#endif
+  
   return true;
   
 }//END play sound    

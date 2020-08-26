@@ -34,8 +34,8 @@ bool
 Synth::Init()
 {
   bool bReturn = false;
-  //bReturn =  Synth::InitOutput();
-  bReturn = Synth::InitInput();
+  bReturn =  Synth::InitOutput();
+  //bReturn = Synth::InitInput();
 
   return bReturn;
 }
@@ -45,14 +45,15 @@ Synth::InitOutput()
 {
   SDL_Log("Synth::InitOuput was called");
   uint32_t ech = 48000;  //TODO VDT ech - ech  i.e 48000 is a magic number, Figure this out.
-  
-  int iError = SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER);
+
+  //#ifdef ALREADYDONE
+  int iError = SDL_InitSubSystem(SDL_INIT_AUDIO);
   if (  iError != 0 )
     {
-      cout << "SDL init failed here is error:" << SDL_GetError() << endl;
+      cout << "SDL_InitSubSystem failed here is error:" << SDL_GetError() << endl;
       return false;
     }
-
+  //#endif
   // SDL_AudioSpec defines a (void*) user data field ( m_AudioSpecOuputWant.userdata) i.e. -  m_AudioSpecOuputWant.userdata = this;
   SDL_memset(&m_AudioSpecOutputWant, 0, sizeof(m_AudioSpecOutputWant)); /* or SDL_zero(want) */
   m_AudioSpecOutputWant.freq = ech; 
@@ -114,6 +115,7 @@ Synth::InitInput()
 bool
 Synth::BeginPlaying()
 {
+  cout << "Synth::BeginPlaying was called" << endl;
   SDL_PauseAudioDevice(m_OutputDevice, 0); /* start audio playing. */
 
   return true;
@@ -134,7 +136,7 @@ Synth::AddSound(double iFrequency)
 {
 
   iFrequency = 440;
-  //cout << "Synth::AddSound was called. here is frequency:" << iFrequency << endl;
+  cout << "Synth::AddSound was called. here is frequency:" << iFrequency << endl;
 
   SoundGenerator * psound = new SinusGenerator(1, iFrequency);
   SoundGeneratorList.push_front(psound);
