@@ -95,9 +95,20 @@ bool MFM::Audio::PlaySound(u32 uSound)
 #ifdef DOAUDIOOUTPUT
   LOG.Message("Audio::PlaySound uSound was  %x", static_cast<int>(uSound));
 
-  LOG.Message("Audio::PlaySound was called");
+  //TODO VDT -  remove this mapping -solve -  note sound attributes are being extended
+  if ( uSound == 0xFF000055 )
+    uSound = 659;
+  else if ( uSound == 0xFF000011 )
+    uSound = 440;
+  else if ( uSound == 0xFF000033 )
+    uSound = 523;
+        
+  //m_synth.StopPlaying();
+  m_synth.RemoveAllSounds();
   m_synth.AddSound(uSound);
   m_synth.BeginPlaying();
+  usleep(100000);
+  m_synth.StopPlaying();
   
 #endif
   

@@ -14,6 +14,8 @@
 
 using namespace std;
 
+static std::mutex m_mtx;
+
 static  std::list<SoundGenerator*> SoundGeneratorList;
 static size_t bits_per_sample;
 static int vumeter;
@@ -122,6 +124,15 @@ Synth::BeginPlaying()
 }
 
 bool
+Synth::StopPlaying()
+{
+  cout << "Synth::StopPlaying was called" << endl;
+  SDL_PauseAudioDevice(m_OutputDevice, 1); /* stop audio playing. */
+
+  return true;
+}
+
+bool
 Synth::Close()
 {
   SDL_CloseAudioDevice(m_InputDevice);
@@ -134,19 +145,23 @@ Synth::Close()
 bool
 Synth::AddSound(double iFrequency)
 {
+  m_mtx.lock();
 
-  iFrequency = 440;
+  //iFrequency = 440;
   cout << "Synth::AddSound was called. here is frequency:" << iFrequency << endl;
 
   SoundGenerator * psound = new SinusGenerator(1, iFrequency);
   SoundGeneratorList.push_front(psound);
-  
+
+  m_mtx.unlock();
   return true;
 }
 
 bool
 Synth::RemoveSound(double iFrequency)
 {
+  m_mtx.lock();
+  
   cout << "Synth::RemoveSound was called. here is frequency:" << iFrequency << endl;
   
   if ( SoundGeneratorList.size() < 1 )
@@ -163,7 +178,20 @@ Synth::RemoveSound(double iFrequency)
     }
   
   SoundGeneratorList.remove(removeItem);
+
+  m_mtx.unlock();
+  return true;
+}
+
+bool
+Synth::RemoveAllSounds()
+{
+  m_mtx.lock();
   
+  cout << "Synth::RemoveAllSounds was called." << endl;
+  SoundGeneratorList.clear();
+
+  m_mtx.unlock();
   return true;
 }
 
@@ -230,6 +258,7 @@ Synth::CheckForAudioEvent()
 void
 Synth::SynthAudioCallback(void *unused, Uint8 *byteStream, int byteStreamLength)
 {
+  m_mtx.lock();
   //SDL_Log("SynthAudioCallback was called");
 
   if ( SoundGeneratorList.size() == 0 )
@@ -251,6 +280,7 @@ Synth::SynthAudioCallback(void *unused, Uint8 *byteStream, int byteStreamLength)
       stream[i+1] = 32767 * right / SoundGeneratorList.size(); //TODO VDT -  32767 is a Volume scaler - for the device
     }
   
+  m_mtx.unlock();
 }
 
 bool

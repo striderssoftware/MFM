@@ -31,9 +31,11 @@ public:
   bool InitInput();
   bool InitOutput();
   bool BeginPlaying();
+  bool StopPlaying();
   bool Close();
   bool AddSound(double frequency);
   bool RemoveSound(double frequency);
+  bool RemoveAllSounds();
   bool TestInput();
   bool TestOutput();
   void EnumerateDevices();
