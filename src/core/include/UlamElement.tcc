@@ -10,6 +10,9 @@
 #include "UlamContextEvent.h"
 #include "UlamContextRestricted.h"
 
+// ADDED VDT
+#include "../../aui/include/Audio.h"
+
 static const unsigned long  AUDIO_DEFAULT = 0x0; // ADDED VDT
 
 namespace MFM {
@@ -32,8 +35,8 @@ namespace MFM {
 
     // ADDED VDT
     // TODO VDT - I dont like this calls being here. - Perhaps - IN or similar to virtual behave call below
-    u32 uAudio = m_info ? m_info->GetElementAudio() : (u32) AUDIO_DEFAULT;
-    window.ProcessAudio(uAudio);
+    u32 uSound= m_info ? m_info->GetElementAudio() : (u32) AUDIO_DEFAULT;
+    window.ProcessAudio(uSound, AudioState::PLAY);
 
     // TODO VDT - Should an Element ever get Audio Input directly i.e. - EventWindow::GetAudio(), I dont know.
     //            maybe - the Element could get a Notice of an Audio Event occurance on the Containing Tile.

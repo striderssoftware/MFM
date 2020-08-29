@@ -917,9 +917,9 @@ namespace MFM
      * This is called from the EventWindow when processing an Elements behavior, Elements now have
      * an Audio attribute.
      */
-    void ProcessAudio(u32 uSound)
+    void ProcessAudio(u32 uSound, AudioState state)
     {
-      m_Audio.ProcessAudio(uSound);
+      m_Audio.ProcessAudio(uSound, state);
     }
 
     /**

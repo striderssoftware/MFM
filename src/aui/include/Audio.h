@@ -22,9 +22,10 @@
 
 using namespace std;
 
+enum AudioState {ADD, REMOVE, PLAY};
+
 namespace MFM
 {
-  
   class Audio 
   {
     
@@ -44,7 +45,7 @@ namespace MFM
      * This takes a u32 sound attribute maps that to wav files and plays them.
      * Currentlly used to play an Elements audio attribute.
      */
-    bool ProcessAudio(u32 uSound);
+    bool ProcessAudio(u32 uSound, AudioState state);
         
     /**
      * This WILL return an input stream of MIC data.
@@ -64,7 +65,22 @@ namespace MFM
      * This makes a system call to play a wav file.
      * currently this maps u32 values to wav files that are musical notes in the Western Tonal system. 
      */
-    bool PlaySound(u32 uSound);
+    bool PlaySound(u32 uSound, AudioState state);
+
+    /**
+     * For playing tones
+     */
+    bool PlayTones();
+
+    /**
+     * For playing drones
+     */
+    bool PlayDrones();
+
+    /**
+     * For playing tones cumulative
+     */
+    bool PlayCumulativeTones();
     
     Synth m_synth;
   };

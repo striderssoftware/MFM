@@ -38,6 +38,9 @@
 #include "ByteSink.h"
 #include "BitStorage.h"
 
+// ADDED VDT
+#include "../../aui/include/Audio.h"
+
 namespace MFM
 {
 
@@ -262,9 +265,9 @@ namespace MFM
      * ADDED VDT
      * 
      */
-    const void ProcessAudio(u32 uSound) const
+    const void ProcessAudio(u32 uSound, AudioState state) const
     {
-      m_tile.ProcessAudio(uSound);
+      m_tile.ProcessAudio(uSound, state);
     }
     
     const Base<AC> & GetBase() const

@@ -43,7 +43,7 @@ bool MFM::Audio::AuiTestFunction(u32 uSound)
  * This takes a u32 sound attribute maps that to wav files and plays them.
  * Currentlly used to play an Elements audio attribute.
  */
-bool MFM::Audio:: ProcessAudio(u32 uSound)
+bool MFM::Audio:: ProcessAudio(u32 uSound, AudioState state)
 {
   if ( uSound == 0 )
     return true;
@@ -53,7 +53,7 @@ bool MFM::Audio:: ProcessAudio(u32 uSound)
   LOG.Message("uSound was  %x", static_cast<int>(uSound));
 #endif
   
-  return PlaySound(uSound); // TODO SDL2PORT - uSound to double - PlaySound(uSound);
+  return PlaySound(uSound, state);// TODO SDL2PORT - uSound to double - PlaySound(uSound);
 }
 
 /**
@@ -90,10 +90,10 @@ bool MFM::Audio::CheckForAudioEvent()
 /**
  * This uses the Synth class to play a frequency.
  */
-bool MFM::Audio::PlaySound(u32 uSound)
+bool MFM::Audio::PlaySound(u32 uSound, AudioState state)
 {
 #ifdef DOAUDIOOUTPUT
-  LOG.Message("Audio::PlaySound uSound was  %x", static_cast<int>(uSound));
+  LOG.Message("Audio::PlaySound uSound was  %x and state was: %x", static_cast<int>(uSound), static_cast<int>(state));
 
   //TODO VDT -  remove this mapping -solve -  note sound attributes are being extended
   if ( uSound == 0xFF000055 )
@@ -115,4 +115,31 @@ bool MFM::Audio::PlaySound(u32 uSound)
   return true;
   
 }//END play sound    
+
+
+/**
+ * 
+ */
+bool MFM::Audio::PlayTones()
+{
+  return true;
+}
+
+
+/**
+ * 
+ */
+bool MFM::Audio::PlayDrones()
+{
+  return true;
+}
+
+
+/**
+ * 
+ */
+bool MFM::Audio::PlayCumulativeTones()
+{
+  return true;
+}
 
