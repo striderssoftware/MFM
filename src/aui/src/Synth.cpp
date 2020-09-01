@@ -22,7 +22,10 @@ static int vumeter;
 
 Synth::Synth()
 {
+
+ #ifdef DOAUDIOLOGGING
   cout << "*********Synth constructor was called" << endl;
+#endif
   SetInputParameters();
 }
 
@@ -37,7 +40,7 @@ Synth::Init()
 {
   bool bReturn = false;
   bReturn =  Synth::InitOutput();
-  //bReturn = Synth::InitInput();
+  bReturn = Synth::InitInput();
 
   return bReturn;
 }
@@ -45,17 +48,19 @@ Synth::Init()
 bool
 Synth::InitOutput()
 {
+#ifdef DOAUDIOLOGGING
   SDL_Log("Synth::InitOuput was called");
+#endif
+
   uint32_t ech = 48000;  //TODO VDT ech - ech  i.e 48000 is a magic number, Figure this out.
 
-  //#ifdef ALREADYDONE
-  int iError = SDL_InitSubSystem(SDL_INIT_AUDIO);
+   int iError = SDL_InitSubSystem(SDL_INIT_AUDIO);
   if (  iError != 0 )
     {
       cout << "SDL_InitSubSystem failed here is error:" << SDL_GetError() << endl;
       return false;
     }
-  //#endif
+ 
   // SDL_AudioSpec defines a (void*) user data field ( m_AudioSpecOuputWant.userdata) i.e. -  m_AudioSpecOuputWant.userdata = this;
   SDL_memset(&m_AudioSpecOutputWant, 0, sizeof(m_AudioSpecOutputWant)); /* or SDL_zero(want) */
   m_AudioSpecOutputWant.freq = ech; 
@@ -87,7 +92,9 @@ Synth::InitOutput()
 bool
 Synth::InitInput()
 {
+#ifdef DOAUDIOLOGGING
   SDL_Log("Synth::InitInput was called");
+#endif
   int iError = SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER);
   if (  iError != 0 )
     {
@@ -117,8 +124,7 @@ Synth::InitInput()
 bool
 Synth::BeginPlaying()
 {
-  cout << "Synth::BeginPlaying was called" << endl;
-  SDL_PauseAudioDevice(m_OutputDevice, 0); /* start audio playing. */
+   SDL_PauseAudioDevice(m_OutputDevice, 0); /* start audio playing. */
 
   return true;
 }
@@ -126,8 +132,7 @@ Synth::BeginPlaying()
 bool
 Synth::StopPlaying()
 {
-  cout << "Synth::StopPlaying was called" << endl;
-  SDL_PauseAudioDevice(m_OutputDevice, 1); /* stop audio playing. */
+   SDL_PauseAudioDevice(m_OutputDevice, 1); /* stop audio playing. */
 
   return true;
 }
@@ -147,9 +152,10 @@ Synth::AddSound(double iFrequency)
 {
   m_mtx.lock();
 
-  //iFrequency = 440;
+#ifdef DOAUDIOLOGGING
   cout << "Synth::AddSound was called. here is frequency:" << iFrequency << endl;
-
+#endif
+  
   SoundGenerator * psound = new SinusGenerator(1, iFrequency);
   SoundGeneratorList.push_front(psound);
 
@@ -161,8 +167,10 @@ bool
 Synth::RemoveSound(double iFrequency)
 {
   m_mtx.lock();
-  
+
+#ifdef DOAUDIOLOGGING
   cout << "Synth::RemoveSound was called. here is frequency:" << iFrequency << endl;
+#endif
   
   if ( SoundGeneratorList.size() < 1 )
     return true;
@@ -210,7 +218,6 @@ Synth::TestOutput()
 bool
 Synth::BeginRecording()
 {
-  cout << " BeginRecording was called" << endl;
   SDL_PauseAudioDevice(m_InputDevice, 0); /* start audio playing. */
 
   return true;
@@ -222,31 +229,18 @@ Synth::BeginRecording()
 bool
 Synth::CheckForAudioEvent()
 {
-  cout << "CheckForAudioEvent was called" << endl;
-
-  int maxVolume = -1;
+   int maxVolume = -1;
 
   Uint8 buf[4024];
   const Uint32 bytesRead = SDL_DequeueAudio(m_InputDevice, buf, sizeof (buf));
   if ( bytesRead < 1 ) {
-    //cout << "CheckForAudioEvent is returning false no bytes read" << endl;
-    return false;
+     return false;
   }
   
-  //cout << "bytes read was:" <<  bytesRead << endl;
-  //OutputAudioSpecs();
-  
-  int count = bytesRead; //1024/8;                                                                                         
+   int count = bytesRead; //1024/8;                                                                                         
   maxVolume = ComputeMaxPeak(&buf[0], count);
   
-  //TODO VDT - remove this 
-  //TODO VDT Volume seems to sensitive - check this once comput_max_peak is done.
- //#define TESTING
-#ifdef TESTING
-  cout << "Synth::CheckForAudioEvent maxVolume was: " << maxVolume << " returning true" << endl;
-#endif
-  
-  if ( maxVolume > VOLUME_THRESHOLD )
+   if ( maxVolume > VOLUME_THRESHOLD )
     {
       cout << "CheckForAudioEvent maxVolume was: " << maxVolume << " returning true" << endl;
       return true;
@@ -259,8 +253,7 @@ void
 Synth::SynthAudioCallback(void *unused, Uint8 *byteStream, int byteStreamLength)
 {
   m_mtx.lock();
-  //SDL_Log("SynthAudioCallback was called");
-
+ 
   if ( SoundGeneratorList.size() == 0 )
     return;
   
@@ -287,9 +280,6 @@ bool
 Synth::TestInput()
 {
   bool result = Init();
-
-  //EnumerateDevices();
-  
 
   if ( result )
     result = BeginRecording();
@@ -335,9 +325,7 @@ Synth::OutputAudioSpecs()
     cout << "Audio Spec Size: " << m_AudioSpecOutputWant.size << endl;
 }
 
-/*                                                                                                                                        
-/ see arecord.c - static void set_params(void) 
-*/
+
 void
 Synth::SetInputParameters()
 {
@@ -392,8 +380,6 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
     break;
   }
  case 16: {
-    cout <<" you shoud get here------------------" << endl;
-
     signed short *valp = (signed short *)data;
     signed short mask = 0; // TODO VDT use - snd_pcm_format_silence_16(hwparams.format);
     
@@ -523,11 +509,8 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
 
 #endif
 
-  cout << "here is max iReturn:" << perc[0] << endl;
   iResult = perc[0];
   return iResult;
-
-  //end new stuff
   
 }// end computemacpeak
 

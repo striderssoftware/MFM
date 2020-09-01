@@ -8,10 +8,6 @@
 //TODO VDT - get rid of releative paths?
 #include "../../core/include/Logger.h"
 
-//#define DOAUDIOINPUT
-#define DOAUDIOOUTPUT
-#define DOAUDIOLOGGING
-
 using namespace std;
 
 MFM::Audio::Audio()
@@ -93,8 +89,11 @@ bool MFM::Audio::CheckForAudioEvent()
 bool MFM::Audio::PlaySound(u32 uSound, AudioState state)
 {
 #ifdef DOAUDIOOUTPUT
-  LOG.Message("Audio::PlaySound uSound was  %x and state was: %x", static_cast<int>(uSound), static_cast<int>(state));
 
+#ifdef DOAUDIOLOGGING
+  LOG.Message("Audio::PlaySound uSound was  %x and state was: %x", static_cast<int>(uSound), static_cast<int>(state));
+#endif
+  
   //TODO VDT -  remove this mapping -solve -  note sound attributes are being extended
   if ( uSound == 0xFF000055 )
     uSound = 659;

@@ -22,6 +22,10 @@
 
 using namespace std;
 
+#define DOAUDIOINPUT
+#define DOAUDIOOUTPUT
+#define DOAUDIOLOGGING
+
 enum AudioState {ADD, REMOVE, PLAY};
 
 namespace MFM
