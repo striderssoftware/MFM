@@ -23,9 +23,8 @@ class Synth
 {
 
 public:
-  
-  Synth();
-  ~Synth();
+
+  static Synth* GetInstance();
 
   bool Init();
   bool InitInput();
@@ -46,6 +45,9 @@ public:
 
   static void SynthAudioCallback(void *unused, Uint8 *byteStream, int byteStreamLength);
 
+protected:
+   Synth();
+  ~Synth();
 private:
   void OutputAudioSpecs();
   void SetInputParameters();
@@ -56,6 +58,7 @@ private:
   SDL_AudioDeviceID m_OutputDevice;
   SDL_AudioDeviceID m_InputDevice;
 
+  static Synth* m_instance;
 };
 
 #endif

@@ -74,19 +74,19 @@ namespace MFM
     /**
      * For playing tones
      */
-    bool PlayTones();
+    bool PlayTones(u32 uSound);
 
     /**
      * For playing drones
      */
-    bool PlayDrones();
+    bool PlayDrones(AudioState state);
 
     /**
      * For playing tones cumulative
      */
-    bool PlayCumulativeTones();
+    bool PlayCumulativeTones(u32 uSound, AudioState state);
     
-    Synth m_synth;
+    Synth* m_pSynth;
   };
 
 } /* namespace MFM */

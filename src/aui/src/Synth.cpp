@@ -20,9 +20,19 @@ static  std::list<SoundGenerator*> SoundGeneratorList;
 static size_t bits_per_sample;
 static int vumeter;
 
+Synth* Synth::m_instance = 0;
+
+Synth* Synth::GetInstance()
+{
+  if ( m_instance == nullptr )
+    m_instance = new Synth();
+
+  return m_instance;
+}
+
 Synth::Synth()
 {
-
+ cout << "*********Synth constructor was called" << endl;
  #ifdef DOAUDIOLOGGING
   cout << "*********Synth constructor was called" << endl;
 #endif
@@ -195,8 +205,10 @@ bool
 Synth::RemoveAllSounds()
 {
   m_mtx.lock();
-  
+
+#ifdef DOAUDIOLOGGING
   cout << "Synth::RemoveAllSounds was called." << endl;
+#endif
   SoundGeneratorList.clear();
 
   m_mtx.unlock();

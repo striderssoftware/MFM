@@ -10,12 +10,17 @@
 
 using namespace std;
 
-MFM::Audio::Audio()
+MFM::Audio::Audio() :
+  m_pSynth(nullptr)
 {
+
+  m_pSynth = Synth::GetInstance();
+
 #ifdef DOAUDIOLOGGING
   LOG.Message("Audio: constructor was called");
 #endif
-  m_synth.Init();
+  
+  m_pSynth->Init();
 }
 
 MFM::Audio::~Audio()
@@ -77,7 +82,7 @@ istream*  MFM::Audio::GetAudio()
 bool MFM::Audio::CheckForAudioEvent()
 {
 #ifdef DOAUDIOINPUT
-  return m_synth.CheckForAudioEvent();
+  return m_pSynth->CheckForAudioEvent();
 #else
   return false;
 #endif
@@ -101,13 +106,10 @@ bool MFM::Audio::PlaySound(u32 uSound, AudioState state)
     uSound = 440;
   else if ( uSound == 0xFF000033 )
     uSound = 523;
-        
-  //m_synth.StopPlaying();
-  m_synth.RemoveAllSounds();
-  m_synth.AddSound(uSound);
-  m_synth.BeginPlaying();
-  usleep(100000);
-  m_synth.StopPlaying();
+
+  PlayTones(uSound);
+  //PlayCumulativeTones(uSound, state);
+  //PlayDrones(state);
   
 #endif
   
@@ -119,7 +121,22 @@ bool MFM::Audio::PlaySound(u32 uSound, AudioState state)
 /**
  * 
  */
-bool MFM::Audio::PlayTones()
+bool MFM::Audio::PlayTones(u32 uSound)
+{
+  m_pSynth->RemoveAllSounds();
+  m_pSynth->AddSound(uSound);
+  m_pSynth->BeginPlaying();
+  usleep(100000);
+  m_pSynth->StopPlaying();
+  
+  return true;
+}
+
+
+/**
+ * 
+ */
+bool MFM::Audio::PlayDrones(AudioState state)
 {
   return true;
 }
@@ -128,17 +145,15 @@ bool MFM::Audio::PlayTones()
 /**
  * 
  */
-bool MFM::Audio::PlayDrones()
+bool MFM::Audio::PlayCumulativeTones(u32 uSound, AudioState state)
 {
-  return true;
-}
+  if ( state == AudioState::ADD )
+    m_pSynth->AddSound(uSound);
 
+  m_pSynth->BeginPlaying();
+  usleep(100000);
+  m_pSynth->StopPlaying();
 
-/**
- * 
- */
-bool MFM::Audio::PlayCumulativeTones()
-{
   return true;
 }
 
