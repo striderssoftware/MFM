@@ -4,9 +4,7 @@
 #include <iostream>
 #include "AuiConstants.h"
 #include "Synth.h"
-//#include "FileByteSink.h" // For STDERR
-//TODO VDT - get rid of releative paths?
-#include "../../core/include/Logger.h"
+#include "Logger.h"
 
 using namespace std;
 

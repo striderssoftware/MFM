@@ -5,7 +5,7 @@ COMPONENTNAME:=aui
 BASEDIR:=../..
 
 # What we need from outside
-override INCLLUDES += $(shell sdl2-config --cflags)
+override INCLUDES += $(shell sdl2-config --cflags) -I $(BASEDIR)/src/core/include 
 override LIBS = -lSDL2 -lSDL2_mixer -lSDL2_ttf -lSDL2_image
 
 # Do the library thing
