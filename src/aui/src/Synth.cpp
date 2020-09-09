@@ -1,15 +1,25 @@
+/*
+/ The Alsa lib was NOT used.
+/ It might be brought in for pcm funtions. (see TODO:ALSA
+/ Code in ComputMaxPeak was modled after comput_max_peak in arecord.c
+/ from the Alsa lib.
+/ https://github.com/alsa-project/alsa-utils
+/ https://alsa-project.org/wiki/Main_Page
+/
+// #include <alsa/asoundlib.h>
+*/
+
 #include <iostream>
 #include <sstream>
 #include <list>
 #include <unistd.h> // TODO VDT - added for Test function sleep call if Test is removed remove this.
 #include <asm/byteorder.h>
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_audio.h>
 
-#include "Synth.h"
 
+#include "Synth.h"
 #include "SinusGenerator.h"
 
 using namespace std;
@@ -343,7 +353,7 @@ Synth::SetInputParameters()
 {
   //TODO VDT I changed this to 16, see alsa lib comments
   
-  bits_per_sample = 16; //snd_pcm_format_physical_width(hwparams.format);
+  bits_per_sample = 16; //TODO:ALSA - snd_pcm_format_physical_width(hwparams.format); hwparams.format = SND_PCM_FORMAT_$16_LE
   
   vumeter = VUMETER_STEREO;
 
@@ -366,10 +376,10 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
 
   signed int val, max, perc[2], max_peak[2];
   static        int     run = 0;
-  //size_t ocount = count;
-  int   format_little_endian = 1; // TODO VDT use - snd_pcm_format_little_endian(hwparams.format);
+  int   format_little_endian = 1; // TODO:ALSA use - snd_pcm_format_little_endian(SND_PCM_FORMAT_S16_LE);
   int ichans, c;
 
+  
   if (vumeter == VUMETER_STEREO)
     ichans = 2;
   else
@@ -378,7 +388,7 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
   switch (bits_per_sample) {
   case 8: {
     signed char *valp = (signed char *)data;
-    signed char mask = 0; //TODO VDT use - snd_pcm_format_silence(hwparams.format);
+    signed char mask = 0; //TODO:ALSA use - snd_pcm_format_silence(hwparams.format); hwparams.format = SND_PCM_FORMAT_$16_LE
     
     c = 0;
     while (count-- > 0) {
@@ -393,7 +403,7 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
   }
  case 16: {
     signed short *valp = (signed short *)data;
-    signed short mask = 0; // TODO VDT use - snd_pcm_format_silence_16(hwparams.format);
+    signed short mask = 0; // TODO:ALSA use - snd_pcm_format_silence_16(hwparams.format); hwparams.format = SND_PCM_FORMAT_$16_LE
     
     signed short sval;
 
@@ -418,9 +428,8 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
   }
   case 24: {
     unsigned char *valp = data;
-    signed int mask = 0; // TODO VDT use - snd_pcm_format_silence_32(hwparams.format);
+    signed int mask = 0; // TODO:ALSA use - snd_pcm_format_silence_32(hwparams.format); hwparams.format = SND_PCM_FORMAT_$16_LE
     
-
     count /= 3;
     c = 0;
     while (count-- > 0) {
@@ -444,7 +453,7 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
   }
   case 32: {
     signed int *valp = (signed int *)data;
-    signed int mask = 0; //TODO VDT use - snd_pcm_format_silence_32(hwparams.format);
+    signed int mask = 0; //TODO:ALSA use - snd_pcm_format_silence_32(hwparams.format);
     
 
     count /= 4;
