@@ -39,10 +39,11 @@ bool MFM::Audio::AuiTestFunction(u32 uSound)
 }
 
 /**
- * This takes a u32 sound attribute maps that to wav files and plays them.
+ * This takes a u32 sound attribute and uses the 
+ * Synth class to play that frequency.
  * Currentlly used to play an Elements audio attribute.
  */
-bool MFM::Audio:: ProcessAudio(u32 uSound, AudioState state)
+bool MFM::Audio::ProcessAudio(u32 uSound, AudioState state)
 {
   if ( uSound == 0 )
     return true;

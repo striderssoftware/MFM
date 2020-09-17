@@ -51,8 +51,7 @@ Synth::Synth()
 
 Synth::~Synth()
 {
-  SDL_CloseAudioDevice(m_OutputDevice);
-  SDL_Quit();  
+  Close();
 }
 
 bool

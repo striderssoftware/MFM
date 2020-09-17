@@ -837,7 +837,7 @@ namespace MFM {
   template <class GC>
   u64 Grid<GC>::GetAudioEventsTest()
   {
-    LOG.Message("                     Grid::GetAudioEventsTest() was called");
+    LOG.Message("Grid::GetAudioEventsTest() was called");
 
     u64 total = 777;
     return total;
