@@ -1385,7 +1385,10 @@ namespace MFM
       SDL_FreeSurface(m_screen);
       SDL_DestroyWindow(m_window);
       TTF_Quit();
+      
+#ifdef the_audio_lib_does_this
       SDL_Quit();
+#endif
     }
 
     ExternalConfigSectionGUI<GC>  m_externalConfigSectionGUI;
