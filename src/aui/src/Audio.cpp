@@ -97,6 +97,9 @@ bool MFM::Audio::PlaySound(u32 uSound, AudioState state)
 #ifdef DOAUDIOLOGGING
   LOG.Message("Audio::PlaySound uSound was  %x and state was: %x", static_cast<int>(uSound), static_cast<int>(state));
 #endif
+
+  if ( uSound == 0xFF000000 )
+    return true;
   
   //TODO VDT -  remove this mapping -solve -  note sound attributes are being extended
   if ( uSound == 0xFF000055 )
@@ -105,7 +108,9 @@ bool MFM::Audio::PlaySound(u32 uSound, AudioState state)
     uSound = 440;
   else if ( uSound == 0xFF000033 )
     uSound = 523;
-
+  else
+    return true;
+  
   PlayTones(uSound);
   //PlayCumulativeTones(uSound, state);
   //PlayDrones(state);
