@@ -98,6 +98,7 @@ bool MFM::Audio::PlaySound(u32 uSound, AudioState state)
   LOG.Message("Audio::PlaySound uSound was  %x and state was: %x", static_cast<int>(uSound), static_cast<int>(state));
 #endif
 
+  // Zero is the default sound - see ULAM/share/perl/UlamGen.pm
   if ( uSound == 0xFF000000 )
     return true;
   
