@@ -99,19 +99,9 @@ bool MFM::Audio::PlaySound(u32 uSound, AudioState state)
 #endif
 
   // Zero is the default sound - see ULAM/share/perl/UlamGen.pm
-  if ( uSound == 0xFF000000 )
+  if ( uSound == 0x00000000 )
     return true;
-  
-  //TODO VDT -  remove this mapping -solve -  note sound attributes are being extended
-  if ( uSound == 0xFF000055 )
-    uSound = 659;
-  else if ( uSound == 0xFF000011 )
-    uSound = 440;
-  else if ( uSound == 0xFF000033 )
-    uSound = 523;
-  else
-    return true;
-  
+
   PlayTones(uSound);
   //PlayCumulativeTones(uSound, state);
   //PlayDrones(state);
