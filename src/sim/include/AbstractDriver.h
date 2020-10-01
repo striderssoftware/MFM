@@ -235,7 +235,7 @@ namespace MFM
     {
       // TODO - Processing in the Grid ?
       // TODO - Generating Audio from the Grid
-      LOG.Message("                     AbstractDriver::UpdateAudio(grid) was called)");
+      LOG.Message("AbstractDriver::UpdateAudio(grid) was called)");
       u64 audioEvents = grid.GetAudioEventsTest();
     }
 

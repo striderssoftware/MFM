@@ -792,7 +792,7 @@ namespace MFM {
     inline const u32 GetTotalSites()
     { return GetWidth() * OWNED_WIDTH * GetHeightSites(); }
 
-    // VDT
+    // VDT - added
     u64 GetAudioEventsTest();
     
     u64 GetTotalEventsExecuted() const;
