@@ -1,6 +1,6 @@
 /*
 / The Alsa lib was NOT used.
-/ It might be brought in for pcm funtions. (see TODO:ALSA
+/ It might be brought in for pcm funtions. (see TODOALSA
 / Code in ComputMaxPeak was modled after comput_max_peak in arecord.c
 / from the Alsa lib.
 / https://github.com/alsa-project/alsa-utils
@@ -12,7 +12,7 @@
 #include <iostream>
 #include <sstream>
 #include <list>
-#include <unistd.h> // TODO VDT - added for Test function sleep call if Test is removed remove this.
+#include <unistd.h>
 #include <asm/byteorder.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -42,8 +42,7 @@ Synth* Synth::GetInstance()
 
 Synth::Synth()
 {
- cout << "*********Synth constructor was called" << endl;
- #ifdef DOAUDIOLOGGING
+  #ifdef DOAUDIOLOGGING
   cout << "*********Synth constructor was called" << endl;
 #endif
   SetInputParameters();
@@ -278,7 +277,7 @@ Synth::SynthAudioCallback(void *unused, Uint8 *byteStream, int byteStreamLength)
   if ( SoundGeneratorList.size() == 0 )
     return;
   
-  uint32_t ech = byteStreamLength / sizeof(int16_t);  //TODO VDT ech - here ECH is the number of "steps" in the stream. Figure this out.
+  uint32_t ech = byteStreamLength / sizeof(int16_t);  
   int16_t* stream =  reinterpret_cast<int16_t*>( byteStream );
   uint32_t i;
   
@@ -324,8 +323,7 @@ Synth::EnumerateDevices()
 
 void
 Synth::OutputAudioSpecs()
-{
-  
+{  
     cout << "---------------- (Recording) Getting data for - m_AudioSpecInputWant ------------" << endl;
 
     cout << "Audio Spec Freq: " << m_AudioSpecInputWant.freq << endl;
@@ -350,8 +348,7 @@ Synth::OutputAudioSpecs()
 void
 Synth::SetInputParameters()
 {
-  //TODO VDT I changed this to 16, see alsa lib comments
-  
+  //TODO VDT I changed this to 16, see alsa lib comments 
   bits_per_sample = 16; //TODO:ALSA - snd_pcm_format_physical_width(hwparams.format); hwparams.format = SND_PCM_FORMAT_$16_LE
   
   vumeter = VUMETER_STEREO;
@@ -420,8 +417,6 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
       if (vumeter == VUMETER_STEREO)
         c = !c;
     }
-    //TODO fix this
-    //return perc[0];
 
     break;
   }
@@ -488,7 +483,6 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
       perc[c] = max_peak[c] * 100 / max;
   }
 
- // OLD FUNCTIN RETURNED HERE                                                                                                             
 #ifdef NOMORE
   if (interleaved && verbose <= 2) {
     static int maxperc[2];
@@ -512,9 +506,6 @@ Synth::ComputeMaxPeak(u_char *data, size_t count)
     fflush(stdout);
 
     cout << " here is iResult:" << iResult << endl;
-    //iResult = perc[0]; //TODO VDT use c ?
-    //return iResult;
-
   }
   else if(verbose==3) {
     printf(("Max peak (%li samples): 0x%08x "), (long)ocount, max_peak[0]);
