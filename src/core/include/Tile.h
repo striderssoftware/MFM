@@ -929,8 +929,6 @@ namespace MFM
      */    
     bool AudioResponse()
     {
-      //TODO VDT - have the tile respond to some Audio Event.
-
       //LOG.Message("Tile::AudioResponse was called");
       ClearAtoms();  //TODO VDT do something cooler.
 

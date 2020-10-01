@@ -833,7 +833,7 @@ namespace MFM {
   }
 
 
-  // TODO VDT
+  // VDT added
   template <class GC>
   u64 Grid<GC>::GetAudioEventsTest()
   {
