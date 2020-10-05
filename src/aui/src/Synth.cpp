@@ -288,9 +288,10 @@ Synth::SynthAudioCallback(void *unused, Uint8 *byteStream, int byteStreamLength)
       
       for (auto pSound: SoundGeneratorList)
 	pSound->next(left, right);
-      
-      stream[i] = 32767 * left / SoundGeneratorList.size(); //TODO VDT -  32767 is a Volume scaler - for the device
-      stream[i+1] = 32767 * right / SoundGeneratorList.size(); //TODO VDT -  32767 is a Volume scaler - for the device
+
+      //TODO VDT - The Magic Number is a Volume scaler - Origionaly it was 32767
+      stream[i] = 10000 * left / SoundGeneratorList.size(); 
+      stream[i+1] = 10000 * right / SoundGeneratorList.size(); 
     }
   
   m_mtx.unlock();
