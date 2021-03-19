@@ -4,7 +4,7 @@
 
 #include "TextPanel.h"
 #include "TimeoutAble.h"
-#include "SDL2/SDLI.h"
+#include "SDLI.h"
 #include "ITCStatus.h"
 #include "T2ADCs.h"
 #include "Menu.h"
