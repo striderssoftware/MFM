@@ -2,7 +2,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "SDLI.h"
+#include "SDL2/SDLI.h"
 
 namespace MFM {
   struct SDLI; // Forward

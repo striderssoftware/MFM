@@ -3,7 +3,7 @@
 #define ADCCTL_H
 
 #include <string.h>  /*for memset*/
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 #include "T2Constants.h"
 #include "T2ADCs.h"

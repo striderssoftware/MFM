@@ -69,7 +69,7 @@ namespace MFM
           LOG.Debug("Unhandled SDL event type %d", event.type);
           break;
 
-        case SDL_VIDEORESIZE:
+        case SDL_WINDOWEVENT_RESIZED:
           LOG.Warning("Ignoring screen resize to (%d,%d)",
                    event.resize.w,
                    event.resize.h);
@@ -235,8 +235,30 @@ namespace MFM
     std::thread kilr(sleeperSignalThread);
     //    u32 flags = SDL_SWSURFACE | SDL_FULLSCREEN;
     u32 flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN;
-    SDL_Surface* screen = SDL_SetVideoMode(T2_SCREEN_WIDTH, T2_SCREEN_HEIGHT, 32, flags);
 
+#ifdef SDL2PORT
+    SDL_Surface* screen = SDL_SetVideoMode(T2_SCREEN_WIDTH, T2_SCREEN_HEIGHT, 32, flags);
+#endif
+    
+    //#ifdef SDL2PORT
+    u32 flags = 0; //TODO SDL2PORT - try it with no falgs, if needed set fullscreen later
+    if (m_window == 0)
+      {
+	m_window = SDL_CreateWindow(MFM_VERSION_STRING_LONG,
+				    SDL_WINDOWPOS_UNDEFINED,
+				    SDL_WINDOWPOS_UNDEFINED,
+				    m_screenWidth, m_screenHeight,
+				    flags); //sdl2  SDL_SWSURFACE|SDL_WINDOW_BORDERLESS);
+      }
+    SDL_Renderer* renderer = SDL_CreateSoftwareRenderer(SDL_GetWindowSurface(m_window));
+    
+    SDL_Surface* screen = SDL_CreateTexture(renderer,
+				 SDL_PIXELFORMAT_ARGB8888,
+				 SDL_TEXTUREACCESS_STREAMING,
+				 640, 480);
+    //TODO SDL2PORT this might need to return a SDL_Window*
+    //#endif
+    
     debug("Joining signal thread");
     kilr.join();
 
@@ -626,6 +648,7 @@ namespace MFM
     draw.BlitBackedTextCentered(buf1.GetZString(), at, UPoint(size.GetX(), siz1.GetY()));
     draw.SetFont(font2);
     draw.BlitBackedTextCentered(buf2.GetZString(), at+SPoint(0,siz1.GetY()), UPoint(size.GetX(), siz2.GetY()));
+    //TODO SDL2PORT SDL_UpdateWindowSurface(m_window);
     SDL_Flip(mScreen);
     sleep(2);
   }
@@ -666,6 +689,7 @@ namespace MFM
     {
       static u32 flips;
       u32 before = mTile.now();
+      //TODO SDL2PORT SDL_UpdateWindowSurface(m_window);
       SDL_Flip(mScreen);
       ++flips;
       u32 after = mTile.now();

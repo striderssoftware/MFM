@@ -8,6 +8,8 @@
 
 #include "itcpktevent.h"
 
+//TODO SDL2PORT - reviewed
+
 namespace MFM {
   T2InfoPanel::T2InfoPanel() 
     : mCornerLights{0}

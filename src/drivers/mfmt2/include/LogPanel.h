@@ -2,7 +2,7 @@
 #ifndef LOGPANEL_H
 #define LOGPANEL_H
 
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 #include "TextPanel.h"
 

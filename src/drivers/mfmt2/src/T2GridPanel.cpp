@@ -3,6 +3,8 @@
 #include "SDLI.h"
 #include "Point.h"
 
+//TODO SDL2PORT - reviewed
+
 namespace MFM {
 
   // Handle mouse button action inside our walls

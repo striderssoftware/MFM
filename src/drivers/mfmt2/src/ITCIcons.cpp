@@ -1,6 +1,9 @@
 #include "ITCIcons.h"
 #include "Logger.h"
 
+
+// TODO SLD2PORT - reviewed
+
 namespace MFM {
   ITCIcons::ITCIcons()
     : mZSheet(0)
@@ -15,7 +18,7 @@ namespace MFM {
     loaded = IMG_Load(filename);
 
     if(loaded) {
-      opped = SDL_DisplayFormatAlpha(loaded);
+      opped = SDL_ConvertSurfaceFormat(loaded);// SDL2PORT was -   SDL_DisplayFormatAlpha(loaded);
 
       SDL_FreeSurface(loaded);
 

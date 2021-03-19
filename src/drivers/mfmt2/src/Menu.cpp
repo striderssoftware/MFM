@@ -2,6 +2,9 @@
 #include "ChooserPanel.h"
 #include "T2Tile.h"
 
+
+//TODO SDL2PORT - reviewed
+
 namespace MFM {
 
   const MenuActionMap MenuAction::mActionMap;

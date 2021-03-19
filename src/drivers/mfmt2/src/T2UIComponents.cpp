@@ -3,6 +3,8 @@
 #include "T2Tile.h"
 #include "TraceTypes.h"
 
+//TODO SDL2PORT - reviewed
+
 namespace MFM {
   bool T2UIButton::ExecuteFunction(u32 keysym, u32 mods) {
     TLOG(DBG,"%s",__PRETTY_FUNCTION__);

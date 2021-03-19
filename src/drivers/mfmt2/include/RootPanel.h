@@ -31,7 +31,7 @@
 #include "Panel.h"
 #include "Drawing.h"
 #include "Fail.h"
-#include "SDL.h"
+#include "SDL2/SDL.h"
 #include "Menu.h"
 
 namespace MFM

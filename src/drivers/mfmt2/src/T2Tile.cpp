@@ -13,6 +13,9 @@
 #include "T2EventWindow.h"
 #include "TraceTypes.h"
 
+
+//TODO SDL2PORT - reviewed
+
 #define ALL_DIR6_MACRO() XX(ET)YY XX(SE)YY XX(SW)YY XX(WT)YY XX(NW)YY XX(NE)ZZ
 
 namespace MFM {

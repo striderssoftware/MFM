@@ -9,7 +9,7 @@
 #include "itype.h"
 #include "AbstractButton.h"
 
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 #include "T2Constants.h"
 
@@ -22,7 +22,7 @@ namespace MFM {
       : mKey(key)
       , mTargetPanelRequired(targ)
     { }
-    SDLKey mKey;
+    SDLKeycode mKey;  //TODO SDL2PORT was SDL_Key
     bool mTargetPanelRequired;
   };
   typedef std::map<std::string,MenuActionInfo> ActionMap;

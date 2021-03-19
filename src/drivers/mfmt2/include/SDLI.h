@@ -7,8 +7,8 @@
 
 #include "LineCountingByteSource.h"
 
-#include "SDL.h"
-#include "SDL_ttf.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include "Panel.h"
 
 #include "itype.h"
@@ -16,6 +16,10 @@
 #include "T2VizConstants.h"
 #include "TimeoutAble.h"
 #include "Menu.h"
+
+
+//TODO SDL2PORT - reviewed
+// SDL2PORT - Panel is defined in MFM/src/gui/include/Panel.h
 
 namespace MFM {
 
@@ -88,8 +92,10 @@ namespace MFM {
     T2Tile & mTile;
     const u32 mScreenWidth;
     const u32 mScreenHeight;
-    SDL_Surface* mScreen;
-
+    SDL_Surface* mScreen; //TODO SDL2PORT used by Drawing.Rest() and Flip
+    SDL_Window* m_Window;
+    //SDL_Renderer* m_renderer; //TODO SDL2PORT used by doLateStartup,- that function could use a local var if this is not needed elsewhere
+    
     bool mShowCursor;
 
     typedef std::map<std::string,Panel*> PanelMap;

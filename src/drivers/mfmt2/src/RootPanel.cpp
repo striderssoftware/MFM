@@ -4,6 +4,8 @@
 #include "SDLI.h"
 #include "Point.h"
 
+//TODO SDL2PORT - reviewed
+
 namespace MFM {
   void RootPanel::addItems(Menu& menu) {
     DIE_UNIMPLEMENTED();
