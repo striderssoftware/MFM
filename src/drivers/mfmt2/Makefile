@@ -38,8 +38,7 @@ override DEFINES += -D MFM_GUI_DRIVER
 # What we need to link                                                                                                                
 override LIBS += -L $(BASEDIR)/build/$(COMPONENTNAME) -L $(BASEDIR)/build/core/ -L $(BASEDIR)/build/elements/ -L $(BASEDIR)/build/sim -L $(BASEDIR)/build/gui/ -L $(T2ADC_INCLUDE_DIR)
 override LIBS += -L $(BASEDIR)/build/t2lib
-override LIBS += -lmfm$(COMPONENTNAME) -lmfmt2lib -lt2adc -lmfmgui -lmfmsim -Wl,--whole-archive -lmfmcore -Wl,--no-whole-archive -lSDL -lSDL_ttf -lSDL_image -lpng -lm
-
+override LIBS += -lmfm$(COMPONENTNAME) -lmfmt2lib -lt2adc -lmfmgui -lmfmsim -Wl,--whole-archive -lmfmcore -Wl,--no-whole-archive -lSDL2 -lSDL2_ttf -lSDL2_image -lpng -lm
 
 # Grr need C99 stuff for LKM so can't have -pedantic here
 # Grr although including Makevars now leads to duplicated flags
