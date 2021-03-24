@@ -37,9 +37,9 @@ namespace MFM {
       return false;
     }
 
-    ExecuteBehavior();
-    
-    m_ewState = FREE;
+    ExecuteBehavior(); 
+    SetFree();
+
     return true;
   }
 
@@ -121,7 +121,7 @@ namespace MFM {
     StoreToTile();
 
     // Step 2: We are done!
-    m_ewState = FREE;
+    SetFree();
   }
 
   template <class EC>
@@ -238,7 +238,7 @@ namespace MFM {
   }
 
   template <class EC>
-  bool EventWindow<EC>::InitForEvent(const SPoint & center)
+  bool EventWindow<EC>::InitForEvent(const SPoint & center, bool tryForLocks)
   {
     Tile<EC> & tile = GetTile();
     MFM_API_ASSERT_STATE(!tile.IsDummyTile()); //sanity
@@ -275,7 +275,7 @@ namespace MFM {
     }
 
     u32 type = atom.GetType();
-    m_element  = tile.GetElementTable().Lookup(type);
+    m_element = tile.GetElementTable().Lookup(type);
     if (m_element == 0) // If no element of that type
     {
       tile.PlaceAtom(tile.GetEmptyAtom(), center);  // You must die
@@ -284,7 +284,7 @@ namespace MFM {
 
     SetBoundary(m_element->GetEventWindowBoundary());
 
-    if (!AcquireAllLocks(center, m_eventWindowBoundary))
+    if (tryForLocks && !AcquireAllLocks(center, m_eventWindowBoundary))
     {
       MFM_LOG_DBG6(("EW::InitForEvent (%d,%d) %s - abandoned",
 		    center.GetX(),center.GetY(),

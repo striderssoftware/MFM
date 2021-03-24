@@ -499,6 +499,21 @@ namespace MFM {
     return MIN<u64>(maskedval, maskdestval);
   }
 
+  inline u32 _String32ToBits32(u32 val, const u32 srcbitwidth, const u32 destbitwidth)
+  {
+    return _Unsigned32ToBits32(val, srcbitwidth, destbitwidth);
+  }
+
+  inline u32 _Bits32ToString32(u32 val, const u32 srcbitwidth, const u32 destbitwidth)
+  {
+    return _Bits32ToUnsigned32(val, srcbitwidth, destbitwidth);
+  }
+
+  inline u32 _String32ToBool32(u32 val, const u32 srcbitwidth, const u32 destbitwidth, const u32 max)
+  {
+    return  _CboolToBool32(((val>0)&&(val<max)), destbitwidth);
+  }
+
   //To UNARY:
   inline u32 _Int32ToUnary32(u32 val, const u32 srcbitwidth, const u32 destbitwidth)
   {
