@@ -11,6 +11,7 @@
 #include "UlamContextRestricted.h"
 
 // ADDED VDT
+#define HAVE_AUDIO
 #ifdef HAVE_AUDIO
 #include "../../aui/include/Audio.h"
 #endif
