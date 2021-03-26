@@ -39,7 +39,11 @@
 #include "BitStorage.h"
 
 // ADDED VDT
+#ifdef HAVE_AUDIO
 #include "../../aui/include/Audio.h"
+#else
+enum AudioState {ADD, REMOVE, PLAY};
+#endif
 
 namespace MFM
 {

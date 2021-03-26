@@ -48,7 +48,9 @@
 #include "LineCountingByteSource.h"
 
 // ADDED VDT
+#ifdef HAVE_AUDIO
 #include "../../aui/include/Audio.h"
+#endif
 
 namespace MFM
 {
@@ -313,8 +315,10 @@ namespace MFM
     // ADDED VDT
     /** The Audio instance which does all Audio for this
         Tile. */
+#ifdef HAVE_AUDIO
     Audio m_Audio;
-    
+#endif
+
     /** The PRNG used for generating all random numbers in this Tile. */
     Random m_random;
 
@@ -902,13 +906,14 @@ namespace MFM
       // TODO maybe - get the actual audio stream and do sometning with it. i.e - m_Audio.GetAudio();  
       // TODO maybe - check the m_elementTable for element audio behavior
       // TODO maybe - Check the EventWindow for EventWindow audio behavior.
-      
+
+#ifdef HAVE_AUDIO
       // Have the Tile respond without "input" from elements.
       if ( m_Audio.CheckForAudioEvent() )
 	{
 	  AudioResponse();
 	}
-      
+#endif      
       return true;
     }
     
@@ -919,7 +924,9 @@ namespace MFM
      */
     void ProcessAudio(u32 uSound, AudioState state)
     {
+#ifdef HAVE_AUDIO
       m_Audio.ProcessAudio(uSound, state);
+#endif
     }
 
     /**
@@ -940,11 +947,14 @@ namespace MFM
      * This is an accessor for other objects to get the Audio stream,
      * The Tile owns the Audio system.
      */
+#ifdef HAVE_AUDIO
     istream*  GetAudio()
     {
+
       return m_Audio.GetAudio();
     }
-
+#endif
+    
     const Element<EC> * ReplaceEmptyElement(const Element<EC>& newEmptyElement) ;
 
     /**

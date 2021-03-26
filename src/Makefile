@@ -10,6 +10,7 @@ ifeq ($(PLATFORM),tile)
 SUBDIRS=platform-$(MFM_TARGET) core sim gui t2lib drivers
 else
 SUBDIRS=platform-$(MFM_TARGET) core elements sim gui aui test drivers
+#define HAVE_AUDIO
 endif
 
 .PHONY:	$(SUBDIRS) all clean realclean

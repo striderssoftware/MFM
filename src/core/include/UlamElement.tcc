@@ -11,7 +11,9 @@
 #include "UlamContextRestricted.h"
 
 // ADDED VDT
+#ifdef HAVE_AUDIO
 #include "../../aui/include/Audio.h"
+#endif
 
 static const unsigned long  AUDIO_DEFAULT = 0x0; // ADDED VDT
 
