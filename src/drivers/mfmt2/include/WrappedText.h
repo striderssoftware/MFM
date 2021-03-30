@@ -31,7 +31,7 @@
 #include <list>
 
 #include "itype.h"
-#include "SDL_ttf.h"
+#include "SDL2/SDL_ttf.h"
 #include "Point.h"
 #include "TextPanel.h"
 #include "Drawing.h"
