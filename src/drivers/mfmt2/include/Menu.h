@@ -40,7 +40,7 @@ namespace MFM {
     static const MenuActionMap mActionMap;
     bool parse(ByteSource& bs) ;
     void performAction(u8 button) ;
-    SDLKey mKeyToPress;
+    SDLKeycode mKeyToPress;  //TODO SDL2PORT was SDL_Key
     OString32 mTargetPanel;
     bool mPanelRequired;
   };
