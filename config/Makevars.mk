@@ -68,6 +68,7 @@ COMMON_LDFLAGS+=-Wl,--fatal-warnings -pthread
 # Urgh gcc 8.3 warns about parens I want to keep
 COMMON_CPPFLAGS+=-Wno-parentheses
 
+# HEAD repo does NOT have this c++11 cpp flag.
 COMMON_CPPFLAGS+= -std=c++11
 
 
