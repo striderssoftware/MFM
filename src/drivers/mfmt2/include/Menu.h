@@ -18,11 +18,11 @@ namespace MFM {
   struct MenuMakerPanel; // FORWARD
 
   struct MenuActionInfo {
-    MenuActionInfo(SDLKey key, bool targ)
+    MenuActionInfo(SDL_Keycode key, bool targ)
       : mKey(key)
       , mTargetPanelRequired(targ)
     { }
-    SDLKeycode mKey;  //TODO SDL2PORT was SDL_Key
+    SDL_Keycode mKey;  //TODO SDL2PORT was SDL_Key
     bool mTargetPanelRequired;
   };
   typedef std::map<std::string,MenuActionInfo> ActionMap;
@@ -40,7 +40,7 @@ namespace MFM {
     static const MenuActionMap mActionMap;
     bool parse(ByteSource& bs) ;
     void performAction(u8 button) ;
-    SDLKeycode mKeyToPress;  //TODO SDL2PORT was SDL_Key
+    SDL_Keycode mKeyToPress;  //TODO SDL2PORT was SDL_Key
     OString32 mTargetPanel;
     bool mPanelRequired;
   };
