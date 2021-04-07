@@ -48,7 +48,7 @@
 #include "LineCountingByteSource.h"
 
 // ADDED VDT
-#define HAVE_AUDIO
+//#define HAVE_AUDIO
 #ifdef HAVE_AUDIO
 #include "../../aui/include/Audio.h"
 #endif
@@ -917,7 +917,8 @@ namespace MFM
 #endif      
       return true;
     }
-    
+
+#ifdef HAVE_AUDIO
     /**
      * ADDED VDT
      * This is called from the EventWindow when processing an Elements behavior, Elements now have
@@ -925,11 +926,10 @@ namespace MFM
      */
     void ProcessAudio(u32 uSound, AudioState state)
     {
-#ifdef HAVE_AUDIO
       m_Audio.ProcessAudio(uSound, state);
-#endif
     }
-
+#endif
+    
     /**
      * ADDED VDT
      * This is to Perform a response to the Audio system notifying

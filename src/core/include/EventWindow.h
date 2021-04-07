@@ -39,11 +39,9 @@
 #include "BitStorage.h"
 
 // ADDED VDT
-#define HAVE_AUDIO
+//#define HAVE_AUDIO
 #ifdef HAVE_AUDIO
 #include "../../aui/include/Audio.h"
-#else
-enum AudioState {ADD, REMOVE, PLAY};
 #endif
 
 namespace MFM
@@ -273,6 +271,7 @@ namespace MFM
       return GetTile().GetSite(m_center);
     }
 
+#ifdef HAVE_AUDIO
     /**
      * ADDED VDT
      * 
@@ -281,6 +280,7 @@ namespace MFM
     {
       m_tile.ProcessAudio(uSound, state);
     }
+#endif
     
     const Base<AC> & GetBase() const
     {

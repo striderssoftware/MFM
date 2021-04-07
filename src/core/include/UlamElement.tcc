@@ -11,7 +11,7 @@
 #include "UlamContextRestricted.h"
 
 // ADDED VDT
-#define HAVE_AUDIO
+//#define HAVE_AUDIO
 #ifdef HAVE_AUDIO
 #include "../../aui/include/Audio.h"
 #endif
@@ -36,6 +36,7 @@ namespace MFM {
     UlamContextEvent<EC> uc(et);
     uc.SetTile(tile);
 
+#ifdef HAVE_AUDIO
     // ADDED VDT
     // TODO VDT - I dont like this calls being here. - Perhaps - IN or similar to virtual behave call below
     u32 uSound= m_info ? m_info->GetElementAudio() : (u32) AUDIO_DEFAULT;
@@ -47,6 +48,8 @@ namespace MFM {
     //            maybe - Whatever the thoughts were for processing changes in LIGHT should apply to Audio
 #ifdef NOTYET
     window.GetAudioEvent();
+#endif
+
 #endif
     
     u32 sym = m_info ? m_info->GetSymmetry(uc) : (u32) PSYM_DEG000L;
