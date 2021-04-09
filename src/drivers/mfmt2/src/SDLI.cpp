@@ -269,11 +269,10 @@ namespace MFM
 				    SDL_WINDOWPOS_UNDEFINED,
 				    mScreenWidth, mScreenHeight,
 				    flags); //sdl2  SDL_SWSURFACE|SDL_WINDOW_BORDERLESS);
-    
-    
-	SDL_Surface* screen = SDL_GetWindowSurface(m_Window);
       }
 
+    SDL_Surface* screen = SDL_GetWindowSurface(m_Window);
+    
     //TODO SDL2PORT this might need to return a SDL_Window*
     //#endif
     
@@ -707,7 +706,7 @@ namespace MFM
     draw.SetFont(font2);
     draw.BlitBackedTextCentered(buf2.GetZString(), at+SPoint(0,siz1.GetY()), UPoint(size.GetX(), siz2.GetY()));
     //TODO SDL2PORT
-    SDL_UpdateWindowSurface(m_window);
+    SDL_UpdateWindowSurface(m_Window);
     //SDL_Flip(mScreen);
     sleep(2);
   }
