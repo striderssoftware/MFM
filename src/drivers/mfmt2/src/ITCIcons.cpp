@@ -18,7 +18,7 @@ namespace MFM {
     loaded = IMG_Load(filename);
 
     if(loaded) {
-      opped = SDL_ConvertSurfaceFormat(loaded);// SDL2PORT was -   SDL_DisplayFormatAlpha(loaded);
+      opped = SDL_ConvertSurfaceFormat(loaded, SDL_PIXELFORMAT_UNKNOWN, 0);// SDL2PORT was -   SDL_DisplayFormatAlpha(loaded);
 
       SDL_FreeSurface(loaded);
 
