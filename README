@@ -6,7 +6,7 @@ This branch is using c++11
 This branch is using SDL2.
 Here are additional package dependencies:
 libsdl-image2.0-dev
-libsdl-ttf2.0-dev
+libsdl2-ttf-dev - or - libsdl-ttf2.0-dev
 libsdl2-2.0
 libsdl2-dev
 libsdl2-doc
