@@ -267,7 +267,7 @@ namespace MFM
 	m_Window = SDL_CreateWindow("todo",//MFM_VERSION_MAJOR, //MFM_VERSION_STRING_LONG,
 				    SDL_WINDOWPOS_UNDEFINED,
 				    SDL_WINDOWPOS_UNDEFINED,
-				    mScreenWidth, mScreenHeight,
+				    T2_SCREEN_WIDTH,T2_SCREEN_HEIGHT,
 				    flags); //sdl2  SDL_SWSURFACE|SDL_WINDOW_BORDERLESS);
       }
 
