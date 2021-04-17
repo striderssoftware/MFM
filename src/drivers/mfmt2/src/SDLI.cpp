@@ -1,5 +1,7 @@
 #include "SDLI.h"
 
+#define HACKMARE
+
 #include <signal.h> // For kill, SIG_TSTP
 #include <stdlib.h> // For putenv
 #include <thread> // For std::thread
@@ -248,9 +250,11 @@ namespace MFM
 
      What a hackmare.
     ********/
-
+#ifdef HACKMARE
     debug("Launching signal thread");
     std::thread kilr(sleeperSignalThread);
+#endif
+    
     //SDL2PORT origional code:    u32 flags = SDL_SWSURFACE | SDL_FULLSCREEN;
 #ifdef SDL2PORT
     u32 flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN;
@@ -275,10 +279,12 @@ namespace MFM
     
     //TODO SDL2PORT this might need to return a SDL_Window*
     //#endif
-    
+
+#ifdef HACKMARE
     debug("Joining signal thread");
     kilr.join();
-
+#endif
+    
     if (screen == 0) {
       fatal("SDL_SetVideoMode(%d,%d,32,0x%x) failed: %s",
             mScreenWidth, mScreenHeight, flags,
